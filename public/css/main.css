@@ -1,0 +1,12 @@
+body{
+    font-family: 'Ubuntu', cursive;
+    margin: 0;
+}
+.header{
+    background-color: darkslateblue;
+    color: white;
+    font-size: 28px;
+    height: 40px;
+    padding: 20px;
+}
+

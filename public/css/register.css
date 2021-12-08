@@ -1,0 +1,59 @@
+.submit_cont{
+    text-align: center;
+    width: 300px;
+    float:left;
+    margin-top: 16px;
+}
+
+.submit{
+    height: fit-content;
+    width: 200px;
+    padding: 7px 16px;
+    color: darkslateblue;
+    background-color: white;
+    font-weight: 400;
+    font-size: 15px;
+    border: 2px solid darkslateblue;
+    border-radius: 10px;
+}
+
+.submit:hover{
+    color: white;
+    background-color: darkslateblue;
+}
+
+.submit:active{
+    color: white;
+    border-color: rgb(60, 51, 116);
+    background-color: rgb(60, 51, 116);
+}
+
+.register_form{
+    width: 300px;
+    height: 200px;
+    margin:25px;
+}
+
+.register_field{
+    float:left;
+    width: 300px;
+    height: fit-content;
+    margin-bottom: 12px;
+}
+
+.field_title{
+    font-weight: 300;
+    float: left;
+}
+
+.field_input{
+    margin-left: 8px;
+    padding: 3px 16px;
+    background-color: white;
+    border: 2px solid darkslateblue;
+    border-radius: 10px;
+    float: right;
+}
+.sub_header{
+    color: darkslateblue;
+}

@@ -1,0 +1,14 @@
+{{define "base"}}
+<!doctype html>
+<html>
+    <head>
+    <title>Userlist site</title>
+    {{template "styles"}}
+    </head>
+    <body>
+        <div class="header">Userlist site</div>
+        {{template "register"}}
+        {{template "user_table" .}}
+    </body>
+</html>
+{{end}}
