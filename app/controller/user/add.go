@@ -1,4 +1,4 @@
-package controller
+package user
 
 import (
 	"crypto/md5"
@@ -17,8 +17,14 @@ func GetMD5Hash(text string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-// AddUser handler
-func AddUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// Add handler
+/*
+-> username string - name of user
+-> password string - user passwod
+-> register string - date of user register
+-> randomid int    - random value
+*/
+func Add(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	// Get values about new user
 	username := r.FormValue("username")
@@ -26,7 +32,7 @@ func AddUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	register := r.FormValue("register")
 	random := r.FormValue("random")
 
-	fmt.Printf("New user: %s , %s, %s \n", username, register, random)
+	fmt.Printf("POST user-add: %s , %s, %s \n", username, register, random)
 
 	// Record new user
 	_, err := settings.DB.Exec("insert into users (username, password, register, random) values ($1, $2, $3, $4)",
