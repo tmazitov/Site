@@ -1,25 +1,18 @@
 {{define "user_table"}}
-    {{if .users}}
-    <div class="table_cont">
+    <script src="/public/js/tableRowsUpdate.js" type="text/javascript"></script>
+    <div class="table_cont" onload="getNewRows()">
         <h2 class="sub_header">Userlist</h2>
-        <div class="table_scroll">
-            <table border="2" cellpadding="6" class="userlist" frame="void">
-            <tr class="table_header">
+        <div class="table_scroll" id="table_scroll" >
+            <table border="2" cellpadding="6" class="userlist" frame="void" onload="getNewRows()" id="table">
+            <tr class="table_header" >
                 <th  bordercolor="white">Username</th>
                 <th  bordercolor="white">RandomId</th>
                 <th bordercolor="white">RegisterDate</th>
             </tr>
-                {{range .users}}
-                <tr class="table_item">
-                    <td>{{.Username}}</td>
-                    <td>{{.RandomId}}</td>
-                    <td>{{.Register}}</td>
-                </tr>
-                {{end}}
             </table>
         </div>
+        <script>
+        tableRowsUpdate({{.consts.USER_ROW_COUNT}})
+        </script>
     </div>
-    {{else}}
-    <div>Users data not found</div>
-    {{end}}
 {{end}}
