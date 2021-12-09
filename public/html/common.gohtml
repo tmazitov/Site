@@ -45,6 +45,7 @@
             <div class="field_title">Password:</div>
             <input id="password" type="text" class="field_input">
         </div>
+        <div class="register_message"></div>
         <div class="submit_cont">
             <button class="submit" onclick="addUser()">Create</button>
         </div>
@@ -53,21 +54,25 @@
 
 {{define "user_table"}}
     {{if .users}}
-    <table border="1" cellpadding="7" class="userlist">
-    <caption>User list</caption>
-    <tr>
-        <th>Username</th>
-        <th>RandomId</th>
-        <th>RegisterDate</th>
-    </tr>
-    {{range .users}}
-        <tr>
-            <td>{{.Username}}</td>
-            <td>{{.RandomId}}</td>
-            <td>{{.Register}}</td>
-        </tr>
-        {{end}}
-    </table>
+    <div class="table_cont">
+        <h2 class="sub_header">Userlist</h2>
+        <div class="table_scroll">
+            <table border="2" cellpadding="6" class="userlist" frame="void">
+            <tr class="table_header">
+                <th  bordercolor="white">Username</th>
+                <th  bordercolor="white">RandomId</th>
+                <th bordercolor="white">RegisterDate</th>
+            </tr>
+                {{range .users}}
+                <tr class="table_item">
+                    <td>{{.Username}}</td>
+                    <td>{{.RandomId}}</td>
+                    <td>{{.Register}}</td>
+                </tr>
+                {{end}}
+            </table>
+        </div>
+    </div>
     {{else}}
     <div>Users data not found</div>
     {{end}}
