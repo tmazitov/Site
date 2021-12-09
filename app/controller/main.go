@@ -16,12 +16,14 @@ func MainPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// HTML file paths
 	mainPath := "./public/html/main.gohtml"
 	commonPath := "./public/html/common.gohtml"
+	tablePath := "./public/html/table.gohtml"
+	registerPath := "./public/html/register.gohtml"
 
 	// All users (data for page)
 	users := model.GetAllUsers()
 
 	// Create a new template
-	ts, err := template.ParseFiles(mainPath, commonPath)
+	ts, err := template.ParseFiles(mainPath, commonPath, tablePath, registerPath)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)

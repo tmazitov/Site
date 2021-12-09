@@ -1,10 +1,10 @@
 {{define "user_table"}}
     {{if .users}}
-    <div class="table_cont">
+    <div class="table_cont" onload="getNewRows()">
         <h2 class="sub_header">Userlist</h2>
-        <div class="table_scroll">
-            <table border="2" cellpadding="6" class="userlist" frame="void">
-            <tr class="table_header">
+        <div class="table_scroll" id="table_scroll" >
+            <table border="2" cellpadding="6" class="userlist" frame="void" onload="getNewRows()" id="table">
+            <tr class="table_header" >
                 <th  bordercolor="white">Username</th>
                 <th  bordercolor="white">RandomId</th>
                 <th bordercolor="white">RegisterDate</th>
@@ -18,7 +18,30 @@
                 {{end}}
             </table>
         </div>
+        <script defer>
+            let b = document.getElementById('table_scroll');
+            var counter = 1;
+            b.addEventListener("scroll", function(){
+                var block = document.getElementById('table_scroll');
+                counter += 1;
+                var table = document.getElementById("table")
+                
+                var contentHeight = table.offsetHeight;      // 1) высота блока контента вместе с границами
+                var yOffset       = block.scrollTop;      // 2) текущее положение скролбара
+                var window_height = block.offsetHeight;      // 3) высота внутренней области окна документа
+                var y             = yOffset + window_height+1;
+                console.log(y, contentHeight)
+                // если пользователь достиг конца
+                if(y >= contentHeight)
+                {
+                    //загружаем новое содержимое в элемент
+                    table.innerHTML = table.innerHTML + "<tr class='table_item'><td>ex</td><td>xe</td><td>tu</td></tr>";
+                    console.log("it is end")
+                }
+            });  
+        </script>
     </div>
+    
     {{else}}
     <div>Users data not found</div>
     {{end}}
