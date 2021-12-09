@@ -6,7 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"site/app/controller"
+	"site/app/controller/start"
+	"site/app/controller/user"
 	"site/app/settings"
 
 	"github.com/joho/godotenv"
@@ -55,9 +56,10 @@ func setEndpoints(r *httprouter.Router) {
 	// For static files
 	r.ServeFiles("/public/*filepath", http.Dir("public"))
 	// GETs
-	r.GET("/", controller.MainPage)
+	r.GET("/", start.MainPage)
 	// POSTs
-	r.POST("/user/new", controller.AddUser)
+	r.POST("/user/new", user.Add)
+	r.POST("/user/list", user.List)
 }
 
 func main() {
