@@ -1,18 +1,23 @@
 {{define "user_table"}}
+    <script src="/public/jstable/clusterize.min.js" type="text/javascript"></script>
     <script src="/public/js/tableRowsUpdate.js" type="text/javascript"></script>
-    <div class="table_cont" onload="getNewRows()">
+    <div class="clusterize" id="table_cont">
         <h2 class="sub_header">Userlist</h2>
-        <div class="table_scroll" id="table_scroll" >
-            <table border="2" cellpadding="6" class="userlist" frame="void" onload="getNewRows()" id="table">
+        <div id="scrollArea" class="clusterize-scroll">
+            
+            <table border="2" cellpadding="6" class="userlist" frame="void">
+            <thead>
             <tr class="table_header" >
-                <th  bordercolor="white">Username</th>
-                <th  bordercolor="white">RandomId</th>
-                <th bordercolor="white">RegisterDate</th>
+                <th>Username</th>
+                <th>RandomId</th>
+                <th>RegisterDate</th>
             </tr>
+            </thead>
+            <tbody id="contentArea" class="clusterize-content"></tbody>
             </table>
         </div>
         <script>
-        tableRowsUpdate({{.consts.USER_ROW_COUNT}})
+            tableRowsUpdate({{.consts.USER_ROW_COUNT}})
         </script>
     </div>
 {{end}}

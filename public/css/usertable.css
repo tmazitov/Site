@@ -1,26 +1,33 @@
-.userlist{
-    width:55vw;
+.userlist {
+    width: 55vw;
     max-height: 600px;
+    border-collapse: collapse;
 }
 
-.table_scroll{
-    overflow-y: auto;
-    height: 530px;
-}
-
-.table_cont{
+#table_cont {
     margin: 25px 75px;
     float: left;
 }
 
-.table_header{
+#table_cont thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     background-color: darkslateblue;
-    color:white;
-    border:2px solid ;
+}
+
+.clusterize-scroll {
+    max-height: 510px;
+}
+
+.table_header {
+    background-color: darkslateblue;
+    color: white;
+    border: 2px solid;
     border-color: darkslateblue;
     border-radius: 5px;
 }
 
-.table_item{
+.table_item {
     border: 1px solid;
 }
