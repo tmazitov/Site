@@ -23,9 +23,6 @@
 .table_header {
     background-color: darkslateblue;
     color: white;
-    border: 2px solid;
-    border-color: darkslateblue;
-    border-radius: 5px;
 }
 
 .table_item {
