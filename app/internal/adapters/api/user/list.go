@@ -26,10 +26,9 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 
 	fmt.Println("POST user-list: part ", part)
 
-	start := settings.USER_ROW_COUNT * part
-	end := settings.USER_ROW_COUNT * (part + 1)
+	offset := settings.USER_ROW_COUNT * part
 
-	users, err := h.userService.GetAll(start, end)
+	users, err := h.userService.GetAll(offset, settings.USER_ROW_COUNT)
 
 	if err != nil {
 		log.Println(err.Error())

@@ -8,15 +8,13 @@ import (
 )
 
 func (bs *userStorage) Register(username, password string) error {
-	register := time.Now()
+	register := time.Now().Format(time.RFC1123)
 
 	rand.Seed(time.Now().UnixNano())
 
-	reg := register.Format("12.12.2021 01:51:36")
-
 	// ??? maybe user in sprintf
 	query := fmt.Sprintf("insert into users (username, password, register, random) values ('%s', '%s', '%s', %v)",
-		username, password, reg, rand.Intn(1000000))
+		username, password, register, rand.Intn(1000000))
 
 	// Record new user
 	_, err := settings.DB.Exec(query)

@@ -70,9 +70,10 @@ function tableRowsUpdate(USER_ROW_COUNT) {
         // checking any scroll event in block
     block.addEventListener("scroll", function() {
         var contentHeight = table.offsetHeight; // heiht of block with borders
-        var yOffset = block.scrollTop; // place of scrollbar
+        var yOffset = block.scrollTop - 31; // place of scrollbar
         var window_height = block.offsetHeight; // heiht into block 
-        var y = yOffset + window_height + 1;
+        var y = yOffset + window_height;
+
         // if end of table
         if (y >= contentHeight) {
             // send reqest to get new users data
