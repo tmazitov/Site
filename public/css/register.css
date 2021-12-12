@@ -44,6 +44,10 @@
     margin-bottom: 12px;
 }
 
+.field_input::placeholder {
+    color: rgb(106, 100, 145);
+}
+
 .field_title {
     font-weight: 300;
     float: left;
