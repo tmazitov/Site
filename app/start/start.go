@@ -1,23 +1,23 @@
 package start
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"site/app/settings"
+	"text/template"
 
 	"github.com/julienschmidt/httprouter"
 )
 
-// MainPage handler
-func MainPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func startPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 
 	// HTML file paths
-	mainPath := "./public/html/main.gohtml"
-	commonPath := "./public/html/common.gohtml"
-	tablePath := "./public/html/table.gohtml"
-	registerPath := "./public/html/register.gohtml"
+	// ??? GOPATH mayby
+	mainPath := "../../public/html/main.gohtml"
+	commonPath := "../../public/html/common.gohtml"
+	tablePath := "../../public/html/table.gohtml"
+	registerPath := "../../public/html/register.gohtml"
 
 	// Create a new template
 	ts, err := template.ParseFiles(mainPath, commonPath, tablePath, registerPath)

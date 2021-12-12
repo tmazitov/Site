@@ -6,15 +6,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"site/app/settings"
 
 	"github.com/julienschmidt/httprouter"
 )
 
 // GetMD5Hash convert to md5 hash
-func GetMD5Hash(text string) string {
+func getMD5Hash(text string) string {
 	hash := md5.Sum([]byte(text))
 	return hex.EncodeToString(hash[:])
+}
+
+func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
 }
 
 // Add handler
@@ -24,19 +27,16 @@ func GetMD5Hash(text string) string {
 -> register string - date of user register
 -> randomid int    - random value
 */
-func Add(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	// Get values about new user
 	username := r.FormValue("username")
-	password := GetMD5Hash(r.FormValue("password"))
-	register := r.FormValue("register")
-	random := r.FormValue("random")
+	password := getMD5Hash(r.FormValue("password"))
 
-	fmt.Printf("POST user-add: %s , %s, %s \n", username, register, random)
+	fmt.Printf("POST user-add: %s \n", username)
 
 	// Record new user
-	_, err := settings.DB.Exec("insert into users (username, password, register, random) values ($1, $2, $3, $4)",
-		username, password, register, random)
+	err := h.userService.Register(username, password)
 
 	if err != nil {
 		log.Println(err.Error())
