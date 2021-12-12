@@ -1,7 +1,7 @@
 package user
 
 import (
-	"site/app/internal/domain/adapters/api"
+	"site/app/internal/adapters/api"
 
 	"github.com/julienschmidt/httprouter"
 )

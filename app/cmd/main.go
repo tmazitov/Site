@@ -7,8 +7,8 @@ import (
 	"site/app/settings"
 	"site/app/start"
 
-	user_handler "site/app/internal/domain/adapters/api/user"
-	user_storage "site/app/internal/domain/adapters/db/user"
+	user_handler "site/app/internal/adapters/api/user"
+	user_storage "site/app/internal/adapters/db/user"
 	user_service "site/app/internal/domain/user"
 
 	"github.com/julienschmidt/httprouter"

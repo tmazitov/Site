@@ -1,7 +1,7 @@
 package user
 
 import (
-	"site/app/internal/domain/adapters/api/user"
+	"site/app/internal/adapters/api/user"
 	"site/app/internal/domain/models"
 )
 
