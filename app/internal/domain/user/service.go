@@ -25,3 +25,7 @@ func (s *service) Login(username string) (string, error) {
 func (s *service) GetAll(limit, offset int) ([]*models.User, error) {
 	return s.storage.GetAll(limit, offset)
 }
+
+func (s *service) IsExists(username string) (bool, error) {
+	return s.storage.IsExists(username)
+}

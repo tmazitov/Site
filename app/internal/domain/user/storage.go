@@ -6,4 +6,5 @@ type Storage interface {
 	Login(username string) (string, error)
 	Register(username, password string) error
 	GetAll(limit, offset int) ([]*models.User, error)
+	IsExists(username string) (bool, error)
 }

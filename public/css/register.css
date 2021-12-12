@@ -1,11 +1,11 @@
-.submit_cont{
+.submit_cont {
     text-align: center;
     width: 300px;
-    float:left;
+    float: left;
     margin-top: 16px;
 }
 
-.submit{
+.submit {
     height: fit-content;
     width: 200px;
     padding: 7px 16px;
@@ -17,18 +17,18 @@
     border-radius: 10px;
 }
 
-.submit:hover{
+.submit:hover {
     color: white;
     background-color: darkslateblue;
 }
 
-.submit:active{
+.submit:active {
     color: white;
     border-color: rgb(60, 51, 116);
     background-color: rgb(60, 51, 116);
 }
 
-.register_form{
+.register_form {
     width: 300px;
     height: 200px;
     margin: 25px;
@@ -37,19 +37,19 @@
     float: left;
 }
 
-.register_field{
-    float:left;
+.register_field {
+    float: left;
     width: 300px;
     height: fit-content;
     margin-bottom: 12px;
 }
 
-.field_title{
+.field_title {
     font-weight: 300;
     float: left;
 }
 
-.field_input{
+.field_input {
     margin-left: 8px;
     padding: 3px 16px;
     background-color: white;
@@ -57,6 +57,12 @@
     border-radius: 10px;
     float: right;
 }
-.sub_header{
+
+.sub_header {
     color: darkslateblue;
+}
+
+#register_message {
+    color: red;
+    font-weight: 300;
 }

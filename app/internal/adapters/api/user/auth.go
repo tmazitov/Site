@@ -29,14 +29,30 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 */
 func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	w.Header().Set("Content-Type", "application/json")
+
 	// Get values about new user
 	username := r.FormValue("username")
+
+	isExists, err := h.userService.IsExists(username)
+
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+	}
+
+	if isExists {
+		http.Error(w, "User alredy exists", http.StatusForbidden)
+		return
+	}
+
 	password := getMD5Hash(r.FormValue("password"))
 
 	fmt.Printf("POST user-add: %s \n", username)
 
 	// Record new user
-	err := h.userService.Register(username, password)
+	err = h.userService.Register(username, password)
 
 	if err != nil {
 		log.Println(err.Error())
