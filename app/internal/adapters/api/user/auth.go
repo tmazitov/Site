@@ -3,9 +3,11 @@ package user
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"site/app/internal/domain/models"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -17,7 +19,31 @@ func getMD5Hash(text string) string {
 }
 
 func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	w.Header().Set("Content-Type", "application/json")
 
+	var token []byte
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	isExists, err := h.userService.Login(username, password)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+	}
+	if !isExists {
+		http.Error(w, "Internal Server Error", http.StatusForbidden)
+	}
+
+	token, err = h.JWTHelper.GenerateAccessToken(models.User{Username: username})
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+	}
+
+	json.NewEncoder(w).Encode(token)
 }
 
 // Add handler
@@ -59,4 +85,14 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 	}
+
+	token, err := h.JWTHelper.GenerateAccessToken(models.User{Username: username})
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Write(token)
 }
