@@ -24,29 +24,29 @@ func (bs *userStorage) Register(username, password string) error {
 	return nil
 }
 
-func (bs *userStorage) Login(username string) (string, error) {
+func (bs *userStorage) Login(username, password string) (bool, error) {
 
-	rows, err := settings.DB.Query("select password from users where username=$1", username)
+	rows, err := settings.DB.Query("select register from users where username=$1", username)
 
 	if err != nil {
 		e := fmt.Errorf("error find pass in db: %s", err)
-		return "", e
+		return true, e
 	}
 
-	var pass string
+	var register string
 	// For each row
 	for rows.Next() {
 		// Reading from row user data and writing to u
-		err := rows.Scan(&pass)
+		err := rows.Scan(&register)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
-		if pass != "" {
-			break
+		if register != "" {
+			return true, nil
 		}
 	}
-	return pass, nil
+	return false, nil
 }
 
 func (bs *userStorage) IsExists(username string) (bool, error) {

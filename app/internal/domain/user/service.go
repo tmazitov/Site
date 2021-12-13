@@ -18,8 +18,8 @@ func (s *service) Register(username, password string) error {
 	return s.storage.Register(username, password)
 }
 
-func (s *service) Login(username string) (string, error) {
-	return s.storage.Login(username)
+func (s *service) Login(username, password string) (bool, error) {
+	return s.storage.Login(username, password)
 }
 
 func (s *service) GetAll(limit, offset int) ([]*models.User, error) {
