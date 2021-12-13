@@ -62,7 +62,7 @@ func (h *helper) GenerateAccessToken(u models.User) ([]byte, error) {
 	// TODO make Randomid UUID
 	claims := UserClains{
 		RegisteredClaims: jwt.RegisteredClaims{
-			ID:        u.Register,
+			ID:        u.UUID,
 			Audience:  []string{"users"},
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 60)),
 		},

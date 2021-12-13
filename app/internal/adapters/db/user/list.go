@@ -24,7 +24,7 @@ func (bs *userStorage) GetAll(offset, limit int) ([]*models.User, error) {
 	for rows.Next() {
 		u := models.User{}
 		// Reading from row user data and writing to u
-		err := rows.Scan(&u.Username, &u.Register, &u.RandomId)
+		err := rows.Scan(&u.Username, &u.Register, &u.UUID)
 		if err != nil {
 			fmt.Println(err)
 			continue

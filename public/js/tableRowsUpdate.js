@@ -51,7 +51,7 @@ function tableRowsUpdate(USER_ROW_COUNT) {
                     RandomIdArray.push(user.RandomId)
                     return `<tr class="table_item">
                         <td>` + user.Username + `</td>
-                        <td>` + user.RandomId + `</td>
+                        <td>` + user.UUID + `</td>
                         <td>` + user.Register + `</td>
                         </tr>`;
                 })

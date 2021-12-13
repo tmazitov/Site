@@ -2,19 +2,24 @@ package user
 
 import (
 	"fmt"
-	"math/rand"
 	"site/app/settings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func (bs *userStorage) Register(username, password string) error {
-	register := time.Now().Format(time.RFC1123)
+	register := time.Now().Unix()
 
-	rand.Seed(time.Now().UnixNano())
+	rand, err := uuid.NewUUID()
+	if err != nil {
+		return err
+	}
+	id := rand.String()
 
 	// Record new user
-	_, err := settings.DB.Exec("insert into users (username, password, register, random) values ($1, $2, $3, $4)",
-		username, password, register, rand.Intn(1000000))
+	_, err = settings.DB.Exec("insert into users (username, password, register, random) values ($1, $2, $3, $4)",
+		username, password, register, id)
 
 	if err != nil {
 		e := fmt.Errorf("error new user to db: %s", err)
