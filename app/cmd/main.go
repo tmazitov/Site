@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"site/app/pkg/cache/freecache"
+	"site/app/pkg/middleware/jwt"
 	"site/app/settings"
 	"site/app/start"
 
@@ -58,7 +60,11 @@ func main() {
 
 	storage := user_storage.NewStorage()
 	service := user_service.NewService(storage)
-	handler := user_handler.NewHandler(service)
+
+	cache := freecache.NewCacheRepo(104857600)
+	helper := jwt.NewHelper(cache)
+
+	handler := user_handler.NewHandler(service, helper)
 	handler.Register(router)
 
 	// Run server
