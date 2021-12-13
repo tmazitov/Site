@@ -9,10 +9,8 @@ import (
 // GetAll get all from users table from the "limit" to the "offset"
 func (bs *userStorage) GetAll(offset, limit int) ([]*models.User, error) {
 
-	query := fmt.Sprintf("select username, register, random from users offset %v limit %v", offset, limit)
-
 	// Select from db
-	rows, err := settings.DB.Query(query)
+	rows, err := settings.DB.Query("select username, register, random from users offset $1 limit $2", offset, limit)
 
 	if err != nil {
 		e := fmt.Errorf("error get rows from db: %s", err)

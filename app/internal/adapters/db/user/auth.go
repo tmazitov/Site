@@ -12,12 +12,9 @@ func (bs *userStorage) Register(username, password string) error {
 
 	rand.Seed(time.Now().UnixNano())
 
-	// ??? maybe user in sprintf
-	query := fmt.Sprintf("insert into users (username, password, register, random) values ('%s', '%s', '%s', %v)",
-		username, password, register, rand.Intn(1000000))
-
 	// Record new user
-	_, err := settings.DB.Exec(query)
+	_, err := settings.DB.Exec("insert into users (username, password, register, random) values ($1, $2, $3, $4)",
+		username, password, register, rand.Intn(1000000))
 
 	if err != nil {
 		e := fmt.Errorf("error new user to db: %s", err)
@@ -29,9 +26,7 @@ func (bs *userStorage) Register(username, password string) error {
 
 func (bs *userStorage) Login(username string) (string, error) {
 
-	query := fmt.Sprintf("select password from users where username=%v", username)
-
-	rows, err := settings.DB.Query(query)
+	rows, err := settings.DB.Query("select password from users where username=$1", username)
 
 	if err != nil {
 		e := fmt.Errorf("error find pass in db: %s", err)
@@ -56,7 +51,7 @@ func (bs *userStorage) Login(username string) (string, error) {
 
 func (bs *userStorage) IsExists(username string) (bool, error) {
 
-	rows, err := settings.DB.Query("select random from users where username='" + username + "'")
+	rows, err := settings.DB.Query("select random from users where username=$1", username)
 	if err != nil {
 		return false, err
 	}
