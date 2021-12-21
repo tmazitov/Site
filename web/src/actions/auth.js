@@ -31,7 +31,7 @@ export function signUpAction(username, password, email, errField) {
         })
         .catch((error) => {
             if (error.response.status === 403) {
-                errField.innerHTML = "User with this username is exists."
+                errField.innerHTML = error.response.data
             }
         });
 }
