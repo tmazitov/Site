@@ -117,6 +117,8 @@ export default {
     }
     #auth_cont{
         margin-top: 80px;
+        margin-left: auto;
+        margin-right: auto;
         height: 400px;
         width: 300px;
         border: 2px solid #9BC3C4;

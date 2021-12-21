@@ -4,7 +4,6 @@
     <div id="main_cont">
       <div if="profile_page">
         <h2 class="header">Profile</h2>
-        <div class="profile_item">This page about you :)</div>
         <div class="profile_item">Username: {{username}}</div>
         <div class="profile_item">Role: {{role}}</div>
         <div class="profile_item">Email: {{email}}</div>
