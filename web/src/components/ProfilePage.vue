@@ -49,6 +49,9 @@ export default {
         this.email = response.data["email"]
       })
       .catch(() => {
+        if ( readValue() === ""){
+          document.location.href = "/auth"
+        }
         refreshTokens()
       });
   },

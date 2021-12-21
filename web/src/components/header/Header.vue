@@ -37,7 +37,7 @@ export default {
 #header_cont{
     background: #5f9ea0;
     height: 60px;
-    min-width: 630px;
+    min-width: 680px;
     padding: 0px 20vw;
 }
 </style>
