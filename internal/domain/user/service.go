@@ -26,8 +26,12 @@ func (s *service) GetAll(limit, offset int) ([]*models.User, error) {
 	return s.storage.GetAll(limit, offset)
 }
 
-func (s *service) IsExists(username string) (bool, error) {
-	return s.storage.IsExists(username)
+func (s *service) CheckUsername(username string) (bool, error) {
+	return s.storage.CheckUsername(username)
+}
+
+func (s *service) CheckEmail(email string) (bool, error) {
+	return s.storage.CheckEmail(email)
 }
 
 func (s *service) GetUserByUsername(username string) (*models.User, error) {

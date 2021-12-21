@@ -7,5 +7,6 @@ type Storage interface {
 	Register(username, password, email string) (*models.User, error)
 	GetAll(limit, offset int) ([]*models.User, error)
 	GetUserByUsername(username string) (*models.User, error)
-	IsExists(username string) (bool, error)
+	CheckUsername(username string) (bool, error)
+	CheckEmail(email string) (bool, error)
 }

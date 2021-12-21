@@ -121,7 +121,7 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	username := r.FormValue("username")
 
 	// Checking the existence of a user with this username
-	isExists, err := h.userService.IsExists(username)
+	isExists, err := h.userService.CheckUsername(username)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Println("")
@@ -129,13 +129,26 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 	if isExists {
-		http.Error(w, "User alredy exists", http.StatusForbidden)
+		http.Error(w, "This username is taken", http.StatusForbidden)
 		return
 	}
 
 	// Get password and email
 	password := getMD5Hash(r.FormValue("password"))
 	email := r.FormValue("email")
+
+	// Checking the existence of a user with this email
+	isExists, err = h.userService.CheckEmail(email)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+	if isExists {
+		http.Error(w, "This email is taken", http.StatusForbidden)
+		return
+	}
 
 	fmt.Printf("POST user-add: %s \n", username)
 

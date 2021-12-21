@@ -27,26 +27,3 @@ func (bs *userStorage) GetUserByUsername(username string) (*models.User, error) 
 	return user, nil
 
 }
-
-func (bs *userStorage) IsExists(username string) (bool, error) {
-
-	rows, err := settings.DB.Query("select random from users where username=$1", username)
-	if err != nil {
-		return false, err
-	}
-
-	var random string
-	for rows.Next() {
-		// Reading from row user data and writing to u
-		err := rows.Scan(&random)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		if random != "" {
-			return true, nil
-		}
-	}
-
-	return false, nil
-}
