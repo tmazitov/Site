@@ -1,0 +1,39 @@
+.header {
+    font-size: 28px;
+    color: #323134;
+    font-weight: 500;
+    margin: 0;
+    font-family: "Baloo Bhaijaan 2";
+}
+
+.sub_header {
+    font-size: 18px;
+    color: #323134;
+    font-weight: 500;
+    font-family: "Baloo Bhaijaan 2";
+}
+
+#main_cont {
+    padding-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans Display', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+h2,
+a {
+    font-family: 'Noto Sans Display', sans-serif;
+    color: black;
+    text-align: left;
+}
+
+a:hover {
+    color: black;
+    cursor: default;
+}
