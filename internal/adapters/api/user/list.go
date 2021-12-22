@@ -45,38 +45,50 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		log.Println(err.Error())
 		fmt.Println("")
 		http.Error(w, "Bad request", 400)
+		return
 	}
 
 	// Get rows count in ine page
-	per_page, err := strconv.Atoi(r.FormValue("per_page"))
+	perPage, err := strconv.Atoi(r.FormValue("per_page"))
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Println("")
 		http.Error(w, "Bad request", 400)
+		return
 	}
 
-	fmt.Println("POST user-list: part ", page)
+	// Get day
+	timestamp, err := strconv.Atoi(r.FormValue("t"))
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Bad request", 400)
+		return
+	}
+
+	fmt.Printf("POST user-list: part %v , timestamp %v \n", page, timestamp)
 
 	// How much to skip
-	offset := per_page * (page - 1)
+	offset := perPage * (page - 1)
 
 	// Get rows with users data
-	users, err := h.userService.GetAll(offset, per_page)
+	users, err := h.userService.GetAll(offset, perPage, timestamp)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
+		return
 	}
 
 	last_page := page
-	if len(users) == per_page {
+	if len(users) == perPage {
 		last_page += 1
 	}
 
 	// Write user data to response body
 	data := map[string]interface{}{
 		"total":        offset + len(users),
-		"per_page":     per_page,
+		"per_page":     perPage,
 		"current_page": page,
 		"last_page":    page + 1,
 		"from":         offset,
