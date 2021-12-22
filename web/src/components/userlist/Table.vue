@@ -1,7 +1,14 @@
 <template>
   <div>
+    <date-picker 
+    v-model="date" 
+    type="date"
+    @change="setDate"
+    >
+    </date-picker>
     <vuetable ref="vuetable"
-      api-url="http://localhost:8000/user/list"
+      :key="time"
+      :api-url="getUrl()"
       :fields="fields"
       data-path="data"
       pagination-path=""
@@ -26,6 +33,8 @@ import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
 import Fields from './Fields.js'
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 import {readValue} from '../../actions/jwt.js'
 
 let t = readValue()
@@ -34,18 +43,21 @@ export default {
   name: "UserList",
   components: {
     Vuetable,
+    DatePicker,
     VuetablePagination,
-    VuetablePaginationInfo
+    VuetablePaginationInfo,
   },
   data() {
     return {
       fields: Fields,
+      time: 0,
       httpOptions: {
         headers: {
             "Authorization": "Bearer "+ t,
         },
         withCredentials: true 
       },
+      date: null,
     };
   },
   methods: {
@@ -55,6 +67,14 @@ export default {
     },
     onChangePage(page) {
       this.$refs.vuetable.changePage(page);
+    },
+    setDate(date){
+      this.time = Date.parse(date) / 1000;
+      this.$refs.vuetable.refresh();
+    },
+    getUrl(){
+      return "http://localhost:8000/user/list?" +
+        "t=" + this.time
     }
   }
 };
@@ -67,4 +87,28 @@ export default {
   .ui.blue.table {
     border-top: 0.2em solid #5f9ea0;
   }
+  .mx-datepicker{
+    margin-bottom: 12px;
+  }
+  .mx-input:hover{
+    border-color: #588C8E;
+  }
+
+  .mx-table-date .today {
+    color: #588C8E;
+  }
+
+  .mx-calendar-content .cell:hover {
+    color: #73879c;
+    background-color: #bad5d6;
+  }
+
+  .mx-calendar-content .cell.active{
+    background-color: #588C8E;
+    color: wheat;
+  }
+  .mx-btn:hover {
+    border-color: #588C8E;
+    color: #588C8E;
+}
 </style>
