@@ -4,6 +4,7 @@
     v-model="date" 
     type="date"
     @change="setDate"
+    @clear="delDate"
     >
     </date-picker>
     <vuetable ref="vuetable"
@@ -72,10 +73,13 @@ export default {
       this.time = Date.parse(date) / 1000;
       this.$refs.vuetable.refresh();
     },
+    delDate(){
+      this.time = 0;
+    },
     getUrl(){
       return "http://localhost:8000/user/list?" +
         "t=" + this.time
-    }
+    },
   }
 };
 </script>
