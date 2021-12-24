@@ -11,10 +11,25 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// Login user handler
-/*
--> username string - name of user
-*/
+type ListParams struct {
+	Timestamp int `json:"timestamp" default:"0"`
+	Page      int `json:"page" default:"1"`
+	Per       int `json:"per_page" default:"16"`
+}
+
+// List godoc
+// @Summary      User list
+// @Description  User list
+// @Tags         User
+// @ID           list
+// @Accept       json
+// @Produce      json
+// @Param        Authorization  header    string      true  "Insert your access token"  default(Bearer <Add access token here>)
+// @Param        Params         query  ListParams  true  "List params"
+// @Success      200            {string}  string      "Success created"
+// @Failure      403            {string}  string      "Forbidden"
+// @Failure      500            {string}  string      "Internal Server Error"
+// @Router       /user/list [get]
 func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	w.Header().Set("Content-Type", "application/json")
@@ -39,46 +54,46 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		return
 	}
 
-	// Get num of page
-	page, err := strconv.Atoi(r.FormValue("page"))
-	if err != nil {
-		log.Println(err.Error())
-		fmt.Println("")
-		http.Error(w, "Bad request", 400)
+	var params ListParams
+	if params.Page, err = strconv.Atoi(r.FormValue("page")); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
-	// Get rows count in ine page
-	per_page, err := strconv.Atoi(r.FormValue("per_page"))
-	if err != nil {
-		log.Println(err.Error())
-		fmt.Println("")
-		http.Error(w, "Bad request", 400)
+	if params.Per, err = strconv.Atoi(r.FormValue("per_page")); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
-	fmt.Println("POST user-list: part ", page)
+	if params.Timestamp, err = strconv.Atoi(r.FormValue("timestamp")); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Printf("POST user-list: part %v , timestamp %v \n", params.Page, params.Timestamp)
 
 	// How much to skip
-	offset := per_page * (page - 1)
+	offset := params.Per * (params.Page - 1)
 
 	// Get rows with users data
-	users, err := h.userService.GetAll(offset, per_page)
+	users, err := h.userService.GetAll(offset, params.Per, params.Timestamp)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 	}
 
-	last_page := page
-	if len(users) == per_page {
-		last_page += 1
+	lastPage := params.Page
+	if len(users) == params.Per {
+		lastPage += 1
 	}
 
 	// Write user data to response body
 	data := map[string]interface{}{
 		"total":        offset + len(users),
-		"per_page":     per_page,
-		"current_page": page,
-		"last_page":    page + 1,
+		"per_page":     params.Per,
+		"current_page": params.Page,
+		"last_page":    lastPage,
 		"from":         offset,
 		"to":           offset + len(users),
 		"data":         users,

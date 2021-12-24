@@ -5,10 +5,9 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"site/pkg/middleware/jwt"
-	"strings"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -19,15 +18,23 @@ func getMD5Hash(text string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-// Login user handler
-/*
-POST:
--> username string - name of user
--> password string - user passwod
-	OR
-PUT:
--> refresh string(cookie)
-*/
+type SignInParams struct {
+	Username string `json:"username" example:"example"`
+	Password string `json:"password" example:"123456789"`
+}
+
+// SignIn godoc
+// @Summary      User auth
+// @Description  User auth
+// @Tags         User
+// @ID           sign-in
+// @Accept       json
+// @Produce      json
+// @Param        Params  body      SignInParams  true  "SignIn params"
+// @Success      200     {string}  string        "Success"
+// @Failure      401     {string}  string        "User not exists"
+// @Failure      500     {string}  string        "Internal Server Error"
+// @Router       /user/entry [post]
 func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Security-Policy", "policy")
@@ -36,53 +43,45 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	var tokens map[string]string
 
-	switch r.Method {
-	case http.MethodPut: // If you need to update access token
+	// Get payload
+	var params SignInParams
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+	if err = json.Unmarshal(body, &params); err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+	params.Password = getMD5Hash(params.Password)
 
-		// Get refresh token
-		cookie := r.Header.Get("Cookie")
-		refresh := strings.Split(cookie, "refresh_token=")[1]
-		refresh = strings.ReplaceAll(refresh, " ", "")
-		rt := jwt.RT{RefreshToken: refresh}
+	// Logining
+	user, err := h.userService.Login(params.Username, params.Password)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
 
-		// Get new access and refresh tokens
-		newTokens, err := h.JWTHelper.UpdateRefreshToken(rt)
-		if err != nil {
-			log.Println(err.Error())
-			fmt.Println("")
-			http.Error(w, "Internal Server Error", 500)
-		}
+	// If invalid passwod or username
+	if user.Register == 0 {
+		http.Error(w, "User not exists", http.StatusUnauthorized)
+		return
+	}
 
-		tokens = newTokens
-
-	case http.MethodPost:
-		// Get username and password
-		username := r.FormValue("username")
-		password := getMD5Hash(r.FormValue("password"))
-
-		// Logining
-		user, err := h.userService.Login(username, password)
-		if err != nil {
-			log.Println(err.Error())
-			fmt.Println("")
-			http.Error(w, "Internal Server Error", 500)
-			return
-		}
-		// If invalid passwod or username
-		if user.Register == 0 {
-			fmt.Println("User not exists")
-			http.Error(w, "Internal Server Error", http.StatusUnauthorized)
-			return
-		}
-
-		// Get new access and refresh tokens
-		tokens, err = h.JWTHelper.GenerateAccessToken(user)
-		if err != nil {
-			log.Println(err.Error())
-			fmt.Println("")
-			http.Error(w, "Internal Server Error", 500)
-			return
-		}
+	// Get new access and refresh tokens
+	tokens, err = h.JWTHelper.GenerateAccessToken(user)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+		return
 	}
 
 	// Set refresh token as cookie
@@ -101,15 +100,28 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		"access_token": tokens["access_token"],
 	}
 
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
 }
 
-// Add user handler
-/*
--> username string - name of user
--> password string - user passwod
--> email    string - user email
-*/
+type SignUpParams struct {
+	Username string `json:"username" example:"example" minLength:"5"`
+	Email    string `json:"email" example:"example@gmail.com"`
+	Password string `json:"password" example:"123456789" minLength:"8"`
+}
+
+// SignUp godoc
+// @Summary      Create new user
+// @Description  Create new user
+// @Tags         User
+// @ID           sign-up
+// @Accept       json
+// @Produce      json
+// @Param        Params  body      SignUpParams  true  "SignUp params"
+// @Success      201     {string}  string        "Success created"
+// @Failure      403     {string}  string        "This username/email is taken"
+// @Failure      500     {string}  string        "Internal Server Error"
+// @Router       /user/new [post]
 func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	w.Header().Set("Content-Type", "application/json")
@@ -117,11 +129,27 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("X-XSS-Protection", "1; mode=block")
 
-	// Get username
-	username := r.FormValue("username")
+	// Get payload
+	var params SignUpParams
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+
+	if err = json.Unmarshal(body, &params); err != nil {
+		log.Println(err.Error())
+		fmt.Println("")
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+
+	params.Password = getMD5Hash(params.Password)
 
 	// Checking the existence of a user with this username
-	isExists, err := h.userService.CheckUsername(username)
+	isExists, err := h.userService.CheckUsername(params.Username)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Println("")
@@ -133,12 +161,8 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	// Get password and email
-	password := getMD5Hash(r.FormValue("password"))
-	email := r.FormValue("email")
-
 	// Checking the existence of a user with this email
-	isExists, err = h.userService.CheckEmail(email)
+	isExists, err = h.userService.CheckEmail(params.Email)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Println("")
@@ -150,10 +174,10 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	fmt.Printf("POST user-add: %s \n", username)
+	fmt.Printf("POST user-add: %s \n", params.Username)
 
 	// Record new user
-	user, err := h.userService.Register(username, password, email)
+	user, err := h.userService.Register(params.Username, params.Password, params.Email)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Println("")

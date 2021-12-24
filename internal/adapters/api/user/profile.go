@@ -10,10 +10,17 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-// Profile user handler
-/*
--> access token(in headers)
-*/
+// Profile godoc
+// @Summary      User profile data
+// @Description  User profile data
+// @Tags         User
+// @ID           profile
+// @Accept       json
+// @Produce      json
+// @Param        Authorization  header    string  true  "Insert your access token"  default(Bearer <Add access token here>)
+// @Success      200            {string}  string  "Success created"
+// @Failure      500            {string}  string  "Internal Server Error"
+// @Router       /user/profile [get]
 func (h *handler) Profile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Security-Policy", "policy")
@@ -46,6 +53,5 @@ func (h *handler) Profile(w http.ResponseWriter, r *http.Request, ps httprouter.
 		"role":     user.Role,
 	}
 
-	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
 }

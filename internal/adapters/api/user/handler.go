@@ -19,7 +19,7 @@ func NewHandler(service Service, helper jwt.Helper) api.Handler {
 func (h *handler) Register(router *httprouter.Router) {
 	router.POST("/user/new", h.SignUp)
 	router.POST("/user/entry", h.SignIn)
-	router.PUT("/user/entry", h.SignIn)
+	router.PUT("/user/refresh", h.Refresh)
 	router.GET("/user/list", jwt.Middleware(h.List))
 	router.GET("/user/profile", jwt.Middleware(h.Profile))
 }

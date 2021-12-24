@@ -22,8 +22,8 @@ func (s *service) Login(username, password string) (*models.User, error) {
 	return s.storage.Login(username, password)
 }
 
-func (s *service) GetAll(limit, offset int) ([]*models.User, error) {
-	return s.storage.GetAll(limit, offset)
+func (s *service) GetAll(limit, offset, timestamp int) ([]*models.User, error) {
+	return s.storage.GetAll(limit, offset, timestamp)
 }
 
 func (s *service) CheckUsername(username string) (bool, error) {

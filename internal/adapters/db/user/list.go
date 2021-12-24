@@ -1,16 +1,38 @@
 package user
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"site/internal/domain/models"
 	"site/settings"
 )
 
 // GetAll get all from users table from the "limit" to the "offset"
-func (bs *userStorage) GetAll(offset, limit int) ([]*models.User, error) {
+func (bs *userStorage) GetAll(offset, limit, timestamp int) ([]*models.User, error) {
 
+	var rows *sql.Rows
+	var err error
+
+	if timestamp == 0 {
+		rows, err = settings.DB.Query(`
+		select 
+		username, role, register 
+		from users
+		offset $1 limit $2`,
+			offset, limit)
+	} else if timestamp > 0 {
+		rows, err = settings.DB.Query(`
+		select 
+		username, role, register 
+		from users
+		where register between $3 and $4  
+		offset $1 limit $2`,
+			offset, limit, timestamp, timestamp+86400)
+	} else {
+		return nil, errors.New("invalid timestamp")
+	}
 	// Select from db
-	rows, err := settings.DB.Query("select username, role, register from users offset $1 limit $2", offset, limit)
 
 	if err != nil {
 		e := fmt.Errorf("error get rows from db: %s", err)
