@@ -1,7 +1,13 @@
 <template>
   <div>
+    <date-picker 
+    v-model="date"
+    @change="setDate"
+    @clear="delDate"
+    ></date-picker>
     <vuetable ref="vuetable"
-      api-url="http://localhost:8000/user/list"
+      :key="time"
+      :api-url="getUrl()"
       :fields="fields"
       data-path="data"
       pagination-path=""
@@ -25,6 +31,10 @@
 import Vuetable from "vuetable-2/src/components/Vuetable";
 import VuetablePagination from "vuetable-2/src/components/VuetablePagination";
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
+
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
+
 import Fields from './Fields.js'
 import {readValue} from '../../actions/jwt.js'
 
@@ -35,7 +45,8 @@ export default {
   components: {
     Vuetable,
     VuetablePagination,
-    VuetablePaginationInfo
+    VuetablePaginationInfo,
+    DatePicker
   },
   data() {
     return {
@@ -46,6 +57,8 @@ export default {
         },
         withCredentials: true 
       },
+      time: 0,
+      date: null,
     };
   },
   methods: {
@@ -55,7 +68,19 @@ export default {
     },
     onChangePage(page) {
       this.$refs.vuetable.changePage(page);
-    }
+    },
+    setDate(date){
+      this.time = Date.parse(date) / 1000;
+      this.$refs.vuetable.refresh();
+    },
+    delDate(){
+      this.time = 0;
+    },
+    getUrl(){
+      return  process.env.VUE_APP_BASE_URL + 
+        "/user/list?" +
+        "timestamp=" + this.time
+    },
   }
 };
 </script>
@@ -67,4 +92,25 @@ export default {
   .ui.blue.table {
     border-top: 0.2em solid #5f9ea0;
   }
+  .mx-input-wrapper{
+    margin-bottom: 12px;
+  }
+  .mx-input:hover{
+    border-color: #5f9ea0;
+  }
+  .mx-btn:hover {
+    border-color: #5f9ea0;
+    color: #75c1c4;
+  }
+  .mx-calendar-content .cell:hover {
+    background-color: #9BC3C4;
+    color:wheat
+  }
+  .mx-table-date .today {
+    color: #75c1c4;
+  }
+  .mx-calendar-content .cell.active {
+    color: wheat;
+    background-color: #5f9ea0;
+  }  
 </style>

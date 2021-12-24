@@ -1,15 +1,16 @@
-import axios from 'axios';
 import { createLocalstorageItem, setNone } from './jwt';
+import client from './client';
 
 export function signInAction(username, password, errField) {
-    axios
-        .post('http://localhost:8000/user/entry?' +
-            'username=' + username +
-            '&password=' + password, {}, { withCredentials: true })
+    client
+        .post('/user/entry', {
+            'username': username,
+            'password': password,
+        }, { withCredentials: true })
         .then((response) => {
             let token = response.data["access_token"]
             createLocalstorageItem(token)
-            window.location.href = "http://localhost:8080/profile"
+            window.location.href = "/profile"
         })
         .catch((error) => {
             if (error.response.status === 401) {
@@ -19,15 +20,16 @@ export function signInAction(username, password, errField) {
 }
 
 export function signUpAction(username, password, email, errField) {
-    axios
-        .post('http://localhost:8000/user/new?' +
-            'username=' + username +
-            '&password=' + password +
-            '&email=' + email)
+    client
+        .post('/user/new', {
+            'username': username,
+            'password': password,
+            'email': email
+        }, { withCredentials: true })
         .then((response) => {
             let token = response.data["access_token"]
             createLocalstorageItem(token)
-            window.location.href = "http://localhost:8080/profile"
+            window.location.href = "/profile"
         })
         .catch((error) => {
             if (error.response.status === 403) {
@@ -38,12 +40,12 @@ export function signUpAction(username, password, email, errField) {
 
 export function signOutAction() {
     setNone()
-    window.location.href = "http://localhost:8080"
+    window.location.href = ""
 }
 
 export function refreshTokens() {
-    axios
-        .put('http://localhost:8000/user/entry', {}, {
+    client
+        .put('/user/refresh', {}, {
             withCredentials: true,
         })
         .then((response) => {
@@ -52,7 +54,7 @@ export function refreshTokens() {
             document.location.reload();
         })
         .catch(() => {
-            window.location.href = "http://localhost:8080/auth"
+            window.location.href = "/auth"
         });
 
 

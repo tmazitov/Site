@@ -19,7 +19,7 @@
 
 <script>
 import Header from './header/Header.vue'
-import axios from 'axios'
+import client from '../actions/client'
 import {readValue} from '../actions/jwt.js'
 import {refreshTokens} from '../actions/auth.js'
 import UserList from './userlist/Table.vue'
@@ -35,8 +35,8 @@ export default {
       }
   },
   beforeCreate() {
-    axios
-      .get('http://localhost:8000/user/profile', {
+    client
+      .get('/user/profile', {
         headers: {
             "Authorization": "Bearer "+ readValue(),
         },
