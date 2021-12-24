@@ -70,7 +70,7 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		return
 	}
 
-	fmt.Printf("POST user-list: part %v , timestamp %v \n", params.Page, params.Timestamp)
+	log.Printf("POST user-list: part %v , timestamp %v \n", params.Page, params.Timestamp)
 
 	// How much to skip
 	offset := params.Per * (params.Page - 1)

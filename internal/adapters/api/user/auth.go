@@ -174,7 +174,7 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	fmt.Printf("POST user-add: %s \n", params.Username)
+	log.Printf("POST user-add: %s \n", params.Username)
 
 	// Record new user
 	user, err := h.userService.Register(params.Username, params.Password, params.Email)
