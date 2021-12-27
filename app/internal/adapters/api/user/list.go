@@ -25,7 +25,7 @@ type ListParams struct {
 // @Accept       json
 // @Produce      json
 // @Param        Authorization  header    string      true  "Insert your access token"  default(Bearer <Add access token here>)
-// @Param        Params         query  ListParams  true  "List params"
+// @Param        Params         query     ListParams  true  "List params"
 // @Success      200            {string}  string      "Success created"
 // @Failure      403            {string}  string      "Forbidden"
 // @Failure      500            {string}  string      "Internal Server Error"

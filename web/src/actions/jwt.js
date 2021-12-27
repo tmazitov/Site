@@ -8,7 +8,11 @@ export function readValue() {
 }
 
 export function hasValue() {
-    return sessionStorage.getItem("jwtToken") == "";
+    let token = sessionStorage.getItem("jwtToken")
+    if (token == null || token == "") {
+        return false
+    }
+    return true;
 }
 
 export function setNone() {

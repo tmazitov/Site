@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"site/pkg/cache/freecache"
 	"site/pkg/middleware/jwt"
@@ -19,7 +20,6 @@ import (
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
 	"github.com/rs/cors"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -30,7 +30,7 @@ func initDbConnect() error {
 	name := viper.GetString("db_name")
 
 	// Connect to database
-	connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", login, password, name)
+	connStr := fmt.Sprintf("postgresql://%s:%s@postgres/%s?sslmode=disable", login, password, name)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		e := fmt.Errorf("database connect error %v", err)
@@ -39,11 +39,22 @@ func initDbConnect() error {
 	// Set db conn to setting for other use
 	settings.DB = db
 
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
+		username text NOT NULL,
+		password text NOT NULL,
+		register integer NOT NULL ,
+		random text NOT NULL,
+		email text NOT NULL,
+		role text NOT NULL)`)
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func initConfig() error {
-	viper.AddConfigPath("../configs")
+	viper.AddConfigPath("./configs")
 	viper.SetConfigName("config")
 	return viper.ReadInConfig()
 }
@@ -58,16 +69,23 @@ func initConfig() error {
 
 // @securitydefinitions.basic
 
-// @host      localhost:8000
+// @host      3117-176-52-104-232.ngrok.io/api
 // @BasePath  /
 func main() {
+
+	log.Println("Set configs")
+
 	if err := initConfig(); err != nil {
-		logrus.Fatalf("error init configs: %s", err.Error())
+		log.Fatalf("error init configs: %s", err.Error())
 	}
 
+	log.Println("Set database connection")
+
 	if err := initDbConnect(); err != nil {
-		logrus.Fatalf("error init db connect: %s", err.Error())
+		log.Fatalf("error init db connect: %s", err.Error())
 	}
+
+	log.Println("Set http router")
 
 	// Router init
 	router := httprouter.New()
@@ -83,6 +101,8 @@ func main() {
 
 	router.GET("/swagger/:any", swaggerHandler)
 
+	log.Println("Set cors policy")
+
 	h := cors.New(cors.Options{
 		AllowedOrigins:   []string{viper.GetString("front_domain")},
 		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodOptions},
@@ -91,8 +111,10 @@ func main() {
 		//Debug:            true,
 	}).Handler(router)
 
+	log.Printf("Starting server on %v port \n", viper.GetString("port"))
+
 	// Run server
-	logrus.Fatal(http.ListenAndServe(":8000", h))
+	log.Fatal(http.ListenAndServe(":"+viper.GetString("port"), h))
 }
 
 func swaggerHandler(res http.ResponseWriter, req *http.Request, p httprouter.Params) {

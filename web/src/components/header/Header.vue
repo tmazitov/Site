@@ -3,8 +3,8 @@
       <Item title="Main" url="/"/>
       <Item title="Profile" url="/profile"/>
       <Item title="About" url="/about"/>
-      <AuthItem title="Sign in" url="/auth" :key="isAuth" v-if="isAuth"/>
-      <AuthItem title="Sign out" :key="isAuth" v-if="!isAuth"/>
+      <AuthItem title="Sign in" url="/auth" :key="isAuth" v-if="!isAuth"/>
+      <AuthItem title="Sign out" :key="isAuth" v-if="isAuth"/>
   </div>
 </template>
 

@@ -15,6 +15,7 @@
         "vue": "^2.6.11",
         "vue-cookies": "^1.7.4",
         "vue-router": "^3.5.3",
+        "vue2-datepicker": "^3.10.4",
         "vuetable-2": "^2.0.0-beta.4"
     },
     "devDependencies": {

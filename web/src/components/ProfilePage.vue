@@ -8,7 +8,7 @@
         <div class="profile_item">Role: {{role}}</div>
         <div class="profile_item">Email: {{email}}</div>
         <div class="profile_item">Registration date: {{register}}</div>
-        <div :key="role" v-if="role=='Admin'" id="panel_cont">
+        <div :key="role" v-if="role == 'Admin'" id="panel_cont">
           <UserList>
           </UserList>
         </div>
@@ -19,10 +19,11 @@
 
 <script>
 import Header from './header/Header.vue'
-import client from '../actions/client'
 import {readValue} from '../actions/jwt.js'
 import {refreshTokens} from '../actions/auth.js'
 import UserList from './userlist/Table.vue'
+import axios from 'axios'
+
 
 export default {
   name: 'Profile',
@@ -35,8 +36,8 @@ export default {
       }
   },
   beforeCreate() {
-    client
-      .get('/user/profile', {
+    axios
+      .get('/api/user/profile', {
         headers: {
             "Authorization": "Bearer "+ readValue(),
         },

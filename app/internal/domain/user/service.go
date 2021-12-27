@@ -37,3 +37,7 @@ func (s *service) CheckEmail(email string) (bool, error) {
 func (s *service) GetUserByUsername(username string) (*models.User, error) {
 	return s.storage.GetUserByUsername(username)
 }
+
+func (s *service) UpgradeRole(user *models.User) error {
+	return s.storage.UpgradeRole(user)
+}

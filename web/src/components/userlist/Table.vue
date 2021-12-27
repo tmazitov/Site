@@ -77,8 +77,7 @@ export default {
       this.time = 0;
     },
     getUrl(){
-      return  process.env.VUE_APP_BASE_URL + 
-        "/user/list?" +
+      return "/api/user/list?" +
         "timestamp=" + this.time
     },
   }

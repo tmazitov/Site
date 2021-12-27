@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -212,4 +213,19 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(data)
+}
+
+func (h *handler) SignOut(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	cookie := &http.Cookie{
+		Name:     "refresh_token",
+		Value:    "",
+		MaxAge:   0,
+		HttpOnly: true,
+		Path:     "/",
+		Domain:   ".localhost",
+		Expires:  time.Unix(0, 0),
+	}
+
+	http.SetCookie(w, cookie)
+	w.WriteHeader(http.StatusOK)
 }
