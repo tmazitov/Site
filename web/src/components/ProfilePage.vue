@@ -22,7 +22,7 @@ import Header from './header/Header.vue'
 import {readValue} from '../actions/jwt.js'
 import {refreshTokens} from '../actions/auth.js'
 import UserList from './userlist/Table.vue'
-import axios from 'axios'
+import client from '../client/client.js'
 
 
 export default {
@@ -36,8 +36,8 @@ export default {
       }
   },
   beforeCreate() {
-    axios
-      .get('/api/user/profile', {
+    client
+      .get('/user/profile', {
         headers: {
             "Authorization": "Bearer "+ readValue(),
         },

@@ -1,9 +1,9 @@
 import { createLocalstorageItem, setNone } from './jwt';
-import axios from 'axios';
+import client from '../client/client';
 
 export function signInAction(username, password, errField) {
-    axios
-        .post('/api/user/entry', {
+    client
+        .post('/user/entry', {
             'username': username,
             'password': password,
         }, { withCredentials: true })
@@ -20,8 +20,8 @@ export function signInAction(username, password, errField) {
 }
 
 export function signUpAction(username, password, email, errField) {
-    axios
-        .post('/api/user/new', {
+    client
+        .post('/user/new', {
             'username': username,
             'password': password,
             'email': email
@@ -40,16 +40,16 @@ export function signUpAction(username, password, email, errField) {
 
 export function signOutAction() {
     setNone()
-    axios
-        .get('/api/user/exit', { withCredentials: true })
+    client
+        .get('/user/exit', { withCredentials: true })
         .then(() => {
             window.location.href = "/"
         })
 }
 
 export function refreshTokens() {
-    axios
-        .put('/api/user/refresh', {}, {
+    client
+        .put('/user/refresh', {}, {
             withCredentials: true,
         })
         .then((response) => {
