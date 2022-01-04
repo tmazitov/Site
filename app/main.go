@@ -75,7 +75,7 @@ func initConfig() error {
 
 // @securitydefinitions.basic
 
-// @host      3117-176-52-104-232.ngrok.io/api
+// @host      localhost:8000/api
 // @BasePath  /
 func main() {
 

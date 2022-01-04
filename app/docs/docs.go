@@ -349,7 +349,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "3117-176-52-104-232.ngrok.io/api",
+	Host:        "localhost:8000/api",
 	BasePath:    "/",
 	Schemes:     []string{},
 	Title:       "Go Restful API with Swagger",

@@ -10,7 +10,7 @@
         },
         "version": "1.0"
     },
-    "host": "3117-176-52-104-232.ngrok.io/api",
+    "host": "localhost:8000/api",
     "basePath": "/",
     "paths": {
         "/user/entry": {
