@@ -29,8 +29,16 @@ func initDbConnect() error {
 	password := viper.GetString("db_pass")
 	name := viper.GetString("db_name")
 
+	var connStr string
+
+	if viper.GetBool("dev") {
+		connStr = fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", login, password, name)
+	} else {
+		connStr = fmt.Sprintf("postgresql://%s:%s@postgres/%s?sslmode=disable", login, password, name)
+	}
+
 	// Connect to database
-	connStr := fmt.Sprintf("postgresql://%s:%s@postgres/%s?sslmode=disable", login, password, name)
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		e := fmt.Errorf("database connect error %v", err)
