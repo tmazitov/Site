@@ -1,7 +1,7 @@
 package user
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
@@ -14,7 +14,7 @@ import (
 
 // GetMD5Hash convert to md5 hash
 func getMD5Hash(text string) string {
-	hash := md5.Sum([]byte(text))
+	hash := sha256.Sum256([]byte(text))
 	return hex.EncodeToString(hash[:])
 }
 
