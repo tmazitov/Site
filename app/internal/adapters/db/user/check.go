@@ -4,12 +4,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"site/settings"
 )
 
-func (bs *userStorage) CheckUsername(username string) error {
+func (us *userStorage) CheckUsername(username string) error {
 
-	row := settings.DB.QueryRow("select register from users where username=$1", username)
+	row := us.Conn.QueryRow("select register from users where username=$1", username)
 
 	var register int
 
@@ -27,8 +26,8 @@ func (bs *userStorage) CheckUsername(username string) error {
 	return nil
 }
 
-func (bs *userStorage) CheckEmail(email string) error {
-	row := settings.DB.QueryRow("select register from users where email=$1", email)
+func (us *userStorage) CheckEmail(email string) error {
+	row := us.Conn.QueryRow("select register from users where email=$1", email)
 
 	var register int
 

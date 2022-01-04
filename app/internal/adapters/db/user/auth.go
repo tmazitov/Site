@@ -3,13 +3,12 @@ package user
 import (
 	"fmt"
 	"site/internal/domain/models"
-	"site/settings"
 	"time"
 
 	"github.com/google/uuid"
 )
 
-func (bs *userStorage) Register(username, password, email string) (*models.User, error) {
+func (us *userStorage) Register(username, password, email string) (*models.User, error) {
 	register := time.Now().Unix()
 
 	rand, err := uuid.NewUUID()
@@ -19,7 +18,7 @@ func (bs *userStorage) Register(username, password, email string) (*models.User,
 	id := rand.String()
 
 	// Record new user
-	_, err = settings.DB.Exec("insert into users (username, password, email, role, register, random) values ($1, $2, $3, $4, $5, $6)",
+	_, err = us.Conn.Exec("insert into users (username, password, email, role, register, random) values ($1, $2, $3, $4, $5, $6)",
 		username, password, email, "User", register, id)
 
 	if err != nil {
@@ -36,9 +35,9 @@ func (bs *userStorage) Register(username, password, email string) (*models.User,
 	return &user, nil
 }
 
-func (bs *userStorage) Login(username, password string) (*models.User, error) {
+func (us *userStorage) Login(username, password string) (*models.User, error) {
 
-	row := settings.DB.QueryRow("select password, role, register from users where username=$1", username)
+	row := us.Conn.QueryRow("select password, role, register from users where username=$1", username)
 
 	user := models.User{Username: username}
 	var pass string

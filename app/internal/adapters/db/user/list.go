@@ -5,24 +5,23 @@ import (
 	"errors"
 	"fmt"
 	"site/internal/domain/models"
-	"site/settings"
 )
 
 // GetAll get all from users table from the "limit" to the "offset"
-func (bs *userStorage) GetAll(offset, limit, timestamp int) ([]*models.User, error) {
+func (us *userStorage) GetAll(offset, limit, timestamp int) ([]*models.User, error) {
 
 	var rows *sql.Rows
 	var err error
 
 	if timestamp == 0 {
-		rows, err = settings.DB.Query(`
+		rows, err = us.Conn.Query(`
 		select 
 		username, role, register 
 		from users
 		offset $1 limit $2`,
 			offset, limit)
 	} else if timestamp > 0 {
-		rows, err = settings.DB.Query(`
+		rows, err = us.Conn.Query(`
 		select 
 		username, role, register 
 		from users

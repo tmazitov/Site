@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"site/pkg/cache/freecache"
 	"site/pkg/middleware/jwt"
-	"site/settings"
 
 	user_handler "site/internal/adapters/api/user"
 	user_storage "site/internal/adapters/db/user"
@@ -23,7 +22,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func initDbConnect() error {
+func initDbConnect() (*sql.DB, error) {
 
 	login := viper.GetString("db_login")
 	password := viper.GetString("db_pass")
@@ -42,10 +41,9 @@ func initDbConnect() error {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		e := fmt.Errorf("database connect error %v", err)
-		return e
+		return nil, e
 	}
 	// Set db conn to setting for other use
-	settings.DB = db
 
 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
 		username text NOT NULL,
@@ -56,9 +54,9 @@ func initDbConnect() error {
 		role text NOT NULL)`)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return db, nil
 }
 
 func initConfig() error {
@@ -89,7 +87,9 @@ func main() {
 
 	log.Println("Set database connection")
 
-	if err := initDbConnect(); err != nil {
+	var conn *sql.DB
+	conn, err := initDbConnect()
+	if err != nil {
 		log.Fatalf("error init db connect: %s", err.Error())
 	}
 
@@ -98,7 +98,7 @@ func main() {
 	// Router init
 	router := httprouter.New()
 
-	storage := user_storage.NewStorage()
+	storage := user_storage.NewStorage(conn)
 	service := user_service.NewService(storage)
 
 	cache := freecache.NewCacheRepo(104857600)
