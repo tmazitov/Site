@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -49,13 +48,11 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 	if err = json.Unmarshal(body, &params); err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -63,15 +60,7 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	// Logining
 	user, err := h.userService.Login(params.Username, params.Password)
-	if err != nil {
-		log.Println(err.Error())
-		fmt.Println("")
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-
-	// If invalid passwod or username
-	if user.Register == 0 {
+	if err != nil || user == nil {
 		http.Error(w, "User not exists", http.StatusUnauthorized)
 		return
 	}
@@ -80,7 +69,6 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	tokens, err = h.JWTHelper.GenerateAccessToken(user)
 	if err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -135,14 +123,12 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 
 	if err = json.Unmarshal(body, &params); err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -150,28 +136,18 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	params.Password = getMD5Hash(params.Password)
 
 	// Checking the existence of a user with this username
-	isExists, err := h.userService.CheckUsername(params.Username)
-	if err != nil {
+
+	if err := h.userService.CheckUsername(params.Username); err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-	if isExists {
-		http.Error(w, "This username is taken", http.StatusForbidden)
+		http.Error(w, "invalid credentials", http.StatusBadRequest)
 		return
 	}
 
 	// Checking the existence of a user with this email
-	isExists, err = h.userService.CheckEmail(params.Email)
-	if err != nil {
+
+	if err = h.userService.CheckEmail(params.Email); err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-	if isExists {
-		http.Error(w, "This email is taken", http.StatusForbidden)
+		http.Error(w, "invalid credentials", http.StatusBadRequest)
 		return
 	}
 
@@ -181,7 +157,6 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	user, err := h.userService.Register(params.Username, params.Password, params.Email)
 	if err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -190,7 +165,6 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	tokens, err := h.JWTHelper.GenerateAccessToken(user)
 	if err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}

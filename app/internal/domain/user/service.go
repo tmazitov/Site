@@ -26,11 +26,11 @@ func (s *service) GetAll(limit, offset, timestamp int) ([]*models.User, error) {
 	return s.storage.GetAll(limit, offset, timestamp)
 }
 
-func (s *service) CheckUsername(username string) (bool, error) {
+func (s *service) CheckUsername(username string) error {
 	return s.storage.CheckUsername(username)
 }
 
-func (s *service) CheckEmail(email string) (bool, error) {
+func (s *service) CheckEmail(email string) error {
 	return s.storage.CheckEmail(email)
 }
 

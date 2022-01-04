@@ -7,7 +7,7 @@ type Service interface {
 	Register(username, password, email string) (*models.User, error)
 	GetAll(limit, offset, timestamp int) ([]*models.User, error)
 	GetUserByUsername(username string) (*models.User, error)
-	CheckUsername(username string) (bool, error)
-	CheckEmail(email string) (bool, error)
+	CheckUsername(username string) error
+	CheckEmail(email string) error
 	UpgradeRole(user *models.User) error
 }

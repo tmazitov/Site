@@ -1,51 +1,47 @@
 package user
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"site/settings"
 )
 
-func (bs *userStorage) CheckUsername(username string) (bool, error) {
+func (bs *userStorage) CheckUsername(username string) error {
 
-	rows, err := settings.DB.Query("select register from users where username=$1", username)
-	if err != nil {
-		return false, err
-	}
+	row := settings.DB.QueryRow("select register from users where username=$1", username)
 
 	var register int
-	for rows.Next() {
-		// Reading from row user data and writing to u
-		err := rows.Scan(&register)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		if register != 0 {
-			return true, nil
-		}
+
+	err := row.Scan(&register)
+	if err != nil && err != sql.ErrNoRows {
+		e := fmt.Errorf("error check user by username in db: %s", err)
+		return e
 	}
 
-	return false, nil
+	if register != 0 {
+		e := errors.New("error user is exists")
+		return e
+	}
+
+	return nil
 }
 
-func (bs *userStorage) CheckEmail(email string) (bool, error) {
-	rows, err := settings.DB.Query("select register from users where email=$1", email)
-	if err != nil {
-		return false, err
-	}
+func (bs *userStorage) CheckEmail(email string) error {
+	row := settings.DB.QueryRow("select register from users where email=$1", email)
 
 	var register int
-	for rows.Next() {
-		// Reading from row user data and writing to u
-		err := rows.Scan(&register)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		if register != 0 {
-			return true, nil
-		}
+
+	err := row.Scan(&register)
+	if err != nil && err != sql.ErrNoRows {
+		e := fmt.Errorf("error check user by email in db: %s", err)
+		return e
 	}
 
-	return false, nil
+	if register != 0 {
+		e := errors.New("error user is exists")
+		return e
+	}
+
+	return nil
 }

@@ -38,27 +38,19 @@ func (bs *userStorage) Register(username, password, email string) (*models.User,
 
 func (bs *userStorage) Login(username, password string) (*models.User, error) {
 
-	rows, err := settings.DB.Query("select password, role, register from users where username=$1", username)
-
-	if err != nil {
-		e := fmt.Errorf("error find pass in db: %s", err)
-		return &models.User{}, e
-	}
+	row := settings.DB.QueryRow("select password, role, register from users where username=$1", username)
 
 	user := models.User{Username: username}
 	var pass string
-	// For each row
-	for rows.Next() {
-		// Reading from row user data and writing to u
-		err := rows.Scan(&pass, &user.Role, &user.Register)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-		if pass == password {
-			return &user, nil
-		}
+
+	err := row.Scan(&pass, &user.Role, &user.Register)
+	if err != nil {
+		e := fmt.Errorf("error find pass in db: %s", err)
+		return nil, e
+	}
+	if pass != password {
+		return nil, nil
 	}
 
-	return &models.User{}, nil
+	return &user, nil
 }

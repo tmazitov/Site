@@ -10,18 +10,12 @@ func (bs *userStorage) GetUserByUsername(username string) (*models.User, error) 
 
 	user := &models.User{Username: username}
 
-	rows, err := settings.DB.Query("select role, email, register from users where username=$1", username)
-	if err != nil {
-		return user, err
-	}
+	row := settings.DB.QueryRow("select role, email, register from users where username=$1", username)
 
-	for rows.Next() {
-		// Reading from row user data and writing to u
-		err := rows.Scan(&user.Role, &user.Email, &user.Register)
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
+	err := row.Scan(&user.Role, &user.Email, &user.Register)
+	if err != nil {
+		e := fmt.Errorf("error get user by username in db: %s", err)
+		return nil, e
 	}
 
 	return user, nil
