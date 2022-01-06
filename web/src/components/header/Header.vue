@@ -3,36 +3,32 @@
       <Item title="Main" url="/"/>
       <Item title="Profile" url="/profile"/>
       <Item title="About" url="/about"/>
-      <AuthItem title="Sign in" url="/auth" :key="isAuth" v-if="!isAuth"/>
-      <AuthItem title="Sign out" url="" :key="isAuth" v-if="isAuth"/>
+      <SignIn title="Sign in" url="/auth" v-if="!isAuth"/>
+      <SignOut title="Sign out" v-if="isAuth"/>
   </div>
 </template>
 
 <script>
 import Item from './item/Item.vue'
-import AuthItem from './auth/Item.vue'
+import SignIn from './auth/SingIn.vue'
+import SignOut from './auth/SignOut.vue'
 import {hasValue} from '../../actions/jwt.js'
 
 export default {
   name: 'Header',
   components: {
     Item,
-    AuthItem,
+    SignIn,
+    SignOut
   },
   data(){
     return {
       isAuth: hasValue(),
     }
   },
-  items: [
-      {text:'Start'},
-      {text:'About'},
-  ],
-  
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #header_cont{
     background: #5f9ea0;

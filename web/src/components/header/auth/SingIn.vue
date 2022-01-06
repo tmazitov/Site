@@ -1,10 +1,11 @@
 <template>
-  <router-link tag='div' class='header_item' :to='url'>{{title}}</router-link> 
+  <router-link class='header_item' tag='div'   :to='url'>{{title}}</router-link>
 </template>
 
 <script>
+
 export default {
-  name: 'Item',
+  name: 'SignIn',
   props: {
     title: String,
     url: String,
