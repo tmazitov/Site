@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <Header />
     <div id="main_cont">
       <div class="main_page">
         <h2 class="header">The good example of good header</h2>
@@ -13,16 +12,11 @@
 </template>
 
 <script>
-import Header from './header/Header.vue'
-
 export default {
   name: 'Main',
   props: {
     msg: String
   },
-  components: {
-    Header,
-  }
 }
 </script>
 

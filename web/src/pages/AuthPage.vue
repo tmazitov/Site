@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <Header />
     <div id="main_cont">
       <div id="auth_cont">
           <h2 class="header" :key="signIn" v-if="signIn">Sign in</h2>
@@ -54,7 +53,6 @@
 </template>
 
 <script>
-import Header from './header/Header.vue'
 import {signInAction, signUpAction} from '../actions/auth.js'
 
 const validate = function(email) {
@@ -104,9 +102,6 @@ export default {
         signUpAction(username, password, email, errField)
     },
   },
-  components: {
-    Header,
-  }
 }
 </script>
 

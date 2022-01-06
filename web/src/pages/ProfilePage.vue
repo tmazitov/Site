@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <Header />
     <div id="main_cont">
       <div if="profile_page">
         <h2 class="header">Profile</h2>
@@ -18,10 +17,9 @@
 </template>
 
 <script>
-import Header from './header/Header.vue'
 import {readValue} from '../actions/jwt.js'
 import {refreshTokens} from '../actions/auth.js'
-import UserList from './userlist/Table.vue'
+import UserList from '../components/userlist/Table.vue'
 import client from '../client/client.js'
 
 
@@ -51,13 +49,12 @@ export default {
       })
       .catch(() => {
         if ( readValue() === ""){
-          document.location.href = "/auth"
+          this.$router.push('auth')
         }
         refreshTokens()
       });
   },
   components: {
-    Header,
     UserList,
   },
 }

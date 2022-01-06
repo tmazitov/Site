@@ -1,6 +1,5 @@
 <template>
   <div id="main">
-    <Header />
     <div id="main_cont">
       <div class="main_page">
         <h2 class="header">About</h2>
@@ -20,16 +19,12 @@
 </template>
 
 <script>
-import Header from './header/Header.vue'
 
 export default {
   name: 'About',
   props: {
     msg: String
   },
-  components: {
-    Header,
-  }
 }
 </script>
 

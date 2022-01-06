@@ -1,29 +1,16 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
 
-import MainPage from './components/MainPage.vue'
-import AuthPage from './components/AuthPage.vue'
-import AboutPage from './components/AboutPage.vue'
-import ProfilePage from './components/ProfilePage.vue'
+import App from './App.vue'
 
-const routes = {
-    "/": MainPage,
-    "/auth": AuthPage,
-    "/profile": ProfilePage,
-    "/about": AboutPage,
-}
-
-new Vue({
-    el: '#app',
-    data: {
-        currentRoute: window.location.pathname
-    },
-    computed: {
-        ViewComponent() {
-            return routes[this.currentRoute] //|| NotFound
-        }
-    },
-    render(h) { return h(this.ViewComponent) }
-})
+import router from './router'
 
 Vue.use(VueCookies)
+Vue.use(VueRouter)
+
+new Vue({
+    render : h => h(App),
+    router
+}).$mount('#app')
+
