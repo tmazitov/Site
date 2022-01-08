@@ -4,7 +4,7 @@
     v-model="date"
     @change="setDate"
     @clear="delDate"
-    placeholder="Choise date"
+    placeholder="Select date"
     ></date-picker>
     <table name="userlist" class="table" >
       <thead>
