@@ -90,13 +90,7 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 
 	// Write user data to response body
 	data := map[string]interface{}{
-		"total":        offset + len(users),
-		"per_page":     params.Per,
-		"current_page": params.Page,
-		"last_page":    lastPage,
-		"from":         offset,
-		"to":           offset + len(users),
-		"data":         users,
+		"users": users,
 	}
 
 	json.NewEncoder(w).Encode(data)
