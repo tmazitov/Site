@@ -1,5 +1,5 @@
 <template>
-  <router-link class='header_item' tag='div'   :to='url'>{{title}}</router-link>
+  <router-link class='header_item' tag='div' :to='url'>{{title}}</router-link>
 </template>
 
 <script>

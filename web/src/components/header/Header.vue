@@ -34,10 +34,10 @@ export default {
     background: #5f9ea0;
     height: 60px;
     min-width: 680px;
-    padding: 0px 20vw;
+    padding: 0px 21vw;
 }
 .header_item{
-  padding: 20px 26px;
+  padding: 16px 26px;
   float: left;
   color: #323134;
   font-weight: 500;
