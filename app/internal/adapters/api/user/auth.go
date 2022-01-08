@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -19,8 +20,8 @@ func getMD5Hash(text string) string {
 }
 
 type SignInParams struct {
-	Username string `json:"username" example:"example"`
-	Password string `json:"password" example:"123456789"`
+	Username string `json:"username" example:"example" valid:"type(string)"`
+	Password string `json:"password" example:"123456789" valid:"type(string)"`
 }
 
 // SignIn godoc
@@ -56,6 +57,24 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
+
+	isValid, err := govalidator.ValidateStruct(params)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+	if !isValid {
+		log.Println("Invalid params for auth")
+		http.Error(w, "Bad request", 400)
+		return
+	}
+	if len(params.Password) > 32 || len(params.Username) > 16 {
+		log.Println("Invalid params for auth")
+		http.Error(w, "Bad request", 400)
+		return
+	}
+
 	params.Password = getMD5Hash(params.Password)
 
 	// Logining
@@ -94,9 +113,9 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 }
 
 type SignUpParams struct {
-	Username string `json:"username" example:"example" minLength:"5"`
-	Email    string `json:"email" example:"example@gmail.com"`
-	Password string `json:"password" example:"123456789" minLength:"8"`
+	Username string `json:"username" example:"example" minLength:"5" valid:"type(string)"`
+	Email    string `json:"email" example:"example@gmail.com" valid:"email"`
+	Password string `json:"password" example:"123456789" minLength:"8" valid:"type(string)"`
 }
 
 // SignUp godoc
@@ -130,6 +149,23 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	if err = json.Unmarshal(body, &params); err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+
+	isValid, err := govalidator.ValidateStruct(params)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+	if !isValid {
+		log.Println("Invalid params for auth")
+		http.Error(w, "Bad request", 400)
+		return
+	}
+	if len(params.Password) > 32 || len(params.Username) > 16 {
+		log.Println("Invalid params for auth")
+		http.Error(w, "Bad request", 400)
 		return
 	}
 

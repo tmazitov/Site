@@ -8,13 +8,14 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/julienschmidt/httprouter"
 )
 
 type ListParams struct {
-	Timestamp int `json:"timestamp" default:"0"`
-	Page      int `json:"page" default:"1"`
-	Per       int `json:"per_page" default:"16"`
+	Timestamp int `json:"timestamp" default:"0" valid:"type(int)"`
+	Page      int `json:"page" default:"1" valid:"type(int)"`
+	Per       int `json:"per_page" default:"16" valid:"type(int)"`
 }
 
 // List godoc
@@ -67,6 +68,23 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 
 	if params.Timestamp, err = strconv.Atoi(r.FormValue("timestamp")); err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	isValid, err := govalidator.ValidateStruct(params)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, "Internal Server Error", 500)
+		return
+	}
+	if !isValid {
+		log.Println("Invalid params for userlist")
+		http.Error(w, "Bad request", 400)
+		return
+	}
+	if params.Page < 1 || params.Per < 1 || params.Timestamp < 1 {
+		log.Println("Invalid params for userlist")
+		http.Error(w, "Bad request", 400)
 		return
 	}
 
