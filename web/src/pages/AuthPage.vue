@@ -127,7 +127,7 @@ export default {
         margin-top: 3px;
         border: 2px solid #9BC3C4;
         border-radius: 7px;
-        height: 28px;
+        height: 20px;
         padding: 3px 8px;
     }
     .auth_field:focus{

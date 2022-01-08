@@ -66,7 +66,7 @@ export default {
     margin-top: 7px;
 }
 #panel_cont{
-  padding: 20px;
+  padding: 20px 5px;
   height: 16px;
 }
 .panel_options_item{
