@@ -53,5 +53,9 @@ func (h *handler) Profile(w http.ResponseWriter, r *http.Request, ps httprouter.
 		"role":     user.Role,
 	}
 
-	json.NewEncoder(w).Encode(data)
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println("fatal encode in user profile: ", err)
+		http.Error(w, "Internal Server Error", 500)
+	}
 }

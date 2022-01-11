@@ -37,7 +37,6 @@ type SignInParams struct {
 // @Failure      500     {string}  string        "Internal Server Error"
 // @Router       /user/entry [post]
 func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Security-Policy", "policy")
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("X-XSS-Protection", "1; mode=block")
@@ -80,7 +79,7 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	// Logining
 	user, err := h.userService.Login(params.Username, params.Password)
 	if err != nil || user == nil {
-		http.Error(w, "User not exists", http.StatusUnauthorized)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
@@ -108,8 +107,11 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		"access_token": tokens["access_token"],
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(data)
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println("fatal encode in auth: ", err)
+		http.Error(w, "Internal Server Error", 500)
+	}
 }
 
 type SignUpParams struct {
@@ -131,8 +133,6 @@ type SignUpParams struct {
 // @Failure      500     {string}  string        "Internal Server Error"
 // @Router       /user/new [post]
 func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Security-Policy", "policy")
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("X-XSS-Protection", "1; mode=block")
@@ -175,7 +175,7 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	if err := h.userService.CheckUsername(params.Username); err != nil {
 		log.Println(err.Error())
-		http.Error(w, "invalid credentials", http.StatusBadRequest)
+		http.Error(w, "Bad request", 400)
 		return
 	}
 
@@ -183,7 +183,7 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	if err = h.userService.CheckEmail(params.Email); err != nil {
 		log.Println(err.Error())
-		http.Error(w, "invalid credentials", http.StatusBadRequest)
+		http.Error(w, "Bad request", 400)
 		return
 	}
 
@@ -221,8 +221,11 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		"access_token": tokens["access_token"],
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(data)
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println("fatal encode in auth: ", err)
+		http.Error(w, "Internal Server Error", 500)
+	}
 }
 
 func (h *handler) SignOut(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {

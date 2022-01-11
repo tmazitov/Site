@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/asaskevich/govalidator"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -71,18 +70,7 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		return
 	}
 
-	isValid, err := govalidator.ValidateStruct(params)
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-	if !isValid {
-		log.Println("Invalid params for userlist")
-		http.Error(w, "Bad request", 400)
-		return
-	}
-	if params.Page < 1 || params.Per < 1 || params.Timestamp < 1 {
+	if params.Page < 1 || params.Per < 1 {
 		log.Println("Invalid params for userlist")
 		http.Error(w, "Bad request", 400)
 		return
@@ -111,5 +99,9 @@ func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		"users": users,
 	}
 
-	json.NewEncoder(w).Encode(data)
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println("fatal encode in userlist: ", err)
+		http.Error(w, "Internal Server Error", 500)
+	}
 }

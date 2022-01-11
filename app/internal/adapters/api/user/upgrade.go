@@ -25,7 +25,6 @@ func (h *handler) UpgradeRole(w http.ResponseWriter, r *http.Request, ps httprou
 	username, _, err := h.JWTHelper.GetUserByToken(r)
 	if err != nil {
 		log.Println(fmt.Errorf("invalid token: %s", err))
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -39,7 +38,6 @@ func (h *handler) UpgradeRole(w http.ResponseWriter, r *http.Request, ps httprou
 
 	if err = h.userService.UpgradeRole(user); err != nil {
 		log.Println(fmt.Errorf("fatal update role: %s", err))
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}

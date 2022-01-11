@@ -61,6 +61,9 @@ func (h *handler) Refresh(w http.ResponseWriter, r *http.Request, ps httprouter.
 		"access_token": tokens["access_token"],
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(data)
+	err = json.NewEncoder(w).Encode(data)
+	if err != nil {
+		log.Println("fatal encode in refresh token: ", err)
+		http.Error(w, "Internal Server Error", 500)
+	}
 }
