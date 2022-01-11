@@ -35,12 +35,7 @@ export default {
   },
   beforeCreate() {
     client
-      .get('/user/profile', {
-        headers: {
-            "Authorization": "Bearer "+ readValue(),
-        },
-        withCredentials: true 
-    })
+      .get('/user/profile')
       .then((response) => {
         this.username = response.data["username"]
         this.register = (new Date(response.data["register"]*1000)).toLocaleString("ru")
