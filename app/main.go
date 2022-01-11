@@ -75,7 +75,7 @@ func initConfig() error {
 
 // @securitydefinitions.basic
 
-// @host      localhost:8000/api
+// @host      localhost/api
 // @BasePath  /
 func main() {
 
