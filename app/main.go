@@ -4,8 +4,13 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"site/initial"
 	"site/pkg/cache/freecache"
 	"site/pkg/middleware/jwt"
+
+	message_handler "site/internal/adapters/api/message"
+	message_storage "site/internal/adapters/db/message"
+	message_service "site/internal/domain/message"
 
 	user_handler "site/internal/adapters/api/user"
 	user_storage "site/internal/adapters/db/user"
@@ -37,14 +42,14 @@ func main() {
 
 	log.Println("Set configs")
 
-	if err := initConfig(); err != nil {
+	if err := initial.Config(); err != nil {
 		log.Fatalf("error init configs: %s", err.Error())
 	}
 
 	log.Println("Set database connection")
 
 	var conn *sql.DB
-	conn, err := initDbConnect()
+	conn, err := initial.DbConnect()
 	if err != nil {
 		log.Fatalf("error init db connect: %s", err.Error())
 	}
@@ -54,14 +59,20 @@ func main() {
 	// Router init
 	router := httprouter.New()
 
-	storage := user_storage.NewStorage(conn)
-	service := user_service.NewService(storage)
+	userStorage := user_storage.NewStorage(conn)
+	userService := user_service.NewService(userStorage)
+
+	messageStorage := message_storage.NewStorage(conn)
+	messageService := message_service.NewService(messageStorage)
 
 	cache := freecache.NewCacheRepo(104857600)
 	helper := jwt.NewHelper(cache)
 
-	handler := user_handler.NewHandler(service, helper)
-	handler.Register(router)
+	userHandler := user_handler.NewHandler(userService, helper)
+	userHandler.Register(router)
+
+	messageHandler := message_handler.NewHandler(messageService, helper)
+	messageHandler.Register(router)
 
 	router.GET("/swagger/:any", swaggerHandler)
 

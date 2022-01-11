@@ -1,20 +1,19 @@
-package main
+package initial
 
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/spf13/viper"
 )
 
 func initDbTables(db *sql.DB) error {
 
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS users (
-		username text NOT NULL,
+		username text NOT NULL UNIQUE,
 		password text NOT NULL,
 		register integer NOT NULL ,
 		random text NOT NULL,
-		email text NOT NULL,
+		email text NOT NULL UNIQUE,
 		role text NOT NULL)`)
 
 	if err != nil {
@@ -38,7 +37,7 @@ func initDbTables(db *sql.DB) error {
 	return nil
 }
 
-func initDbConnect() (*sql.DB, error) {
+func DbConnect() (*sql.DB, error) {
 
 	login := viper.GetString("db_login")
 	password := viper.GetString("db_pass")
@@ -65,10 +64,4 @@ func initDbConnect() (*sql.DB, error) {
 	}
 
 	return db, nil
-}
-
-func initConfig() error {
-	viper.AddConfigPath("./configs")
-	viper.SetConfigName("config")
-	return viper.ReadInConfig()
 }

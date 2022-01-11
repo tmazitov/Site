@@ -3,7 +3,6 @@ package user
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -22,7 +21,7 @@ import (
 // @Failure      500            {string}  string  "Internal Server Error"
 // @Router       /user/profile [get]
 func (h *handler) Profile(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("Content-Type", "application/json")
+
 	w.Header().Set("Content-Security-Policy", "policy")
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("X-XSS-Protection", "1; mode=block")
@@ -30,8 +29,6 @@ func (h *handler) Profile(w http.ResponseWriter, r *http.Request, ps httprouter.
 	// Get username from access token
 	username, _, err := h.JWTHelper.GetUserByToken(r)
 	if err != nil {
-		log.Println(fmt.Errorf("invalid token: %s", err))
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
@@ -40,7 +37,6 @@ func (h *handler) Profile(w http.ResponseWriter, r *http.Request, ps httprouter.
 	user, err := h.userService.GetUserByUsername(username)
 	if err != nil {
 		log.Println(errors.New("invalid token"))
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
