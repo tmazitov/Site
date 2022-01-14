@@ -17,7 +17,10 @@ func NewHandler(service Service, helper jwt.Helper) api.Handler {
 }
 
 func (h *handler) Register(router *httprouter.Router) {
-	router.POST("/order/create", h.Create)
-	router.PUT("/order/update", h.Update)
-	router.GET("/order/get", h.Get)
+	router.POST("/order/create", jwt.Middleware(h.Create))
+	router.PUT("/order/update", jwt.Middleware(h.Update))
+	router.GET("/order/get", jwt.Middleware(h.Get))
+	router.GET("/order/list", jwt.Middleware(h.List))
+	router.DELETE("/order/delete", jwt.Middleware(h.Delete))
+	router.PUT("/order/complite", jwt.Middleware(h.Complite))
 }
