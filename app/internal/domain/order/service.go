@@ -18,18 +18,22 @@ func (s *service) Create(order *models.Order) error {
 	return s.storage.Create(order)
 }
 
-func (s *service) Update(orderId int) error {
-	return s.storage.Update(orderId)
+func (s *service) Update(UUID string, data map[string]string) error {
+	return s.storage.Update(UUID, data)
 }
 
-func (s *service) Delete(orderId int) error {
-	return s.storage.Delete(orderId)
+func (s *service) Delete(UUID string) error {
+	return s.storage.Delete(UUID)
 }
 
-func (s *service) Complite(orderId int) error {
-	return s.storage.Complite(orderId)
+func (s *service) Complite(UUID string) error {
+	return s.storage.Complite(UUID)
 }
 
-func (s *service) Get(orderId int) (*models.Order, error) {
-	return s.storage.Get(orderId)
+func (s *service) Get(UUID string) (*models.Order, error) {
+	return s.storage.Get(UUID)
+}
+
+func (s *service) List() ([]*models.Order, error) {
+	return s.storage.List()
 }
