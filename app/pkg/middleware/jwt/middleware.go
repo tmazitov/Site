@@ -46,6 +46,7 @@ func Middleware(h httprouter.Handle) httprouter.Handle {
 		}
 		if valid := uc.IsValidAt(time.Now()); !valid {
 			unauthorized(w, err)
+			return
 		}
 
 		h(w, r, ps)
@@ -54,5 +55,4 @@ func Middleware(h httprouter.Handle) httprouter.Handle {
 
 func unauthorized(w http.ResponseWriter, err error) {
 	w.WriteHeader(http.StatusUnauthorized)
-	w.Write([]byte("unauthorized"))
 }

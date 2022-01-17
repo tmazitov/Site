@@ -69,7 +69,7 @@ func (h *helper) GenerateAccessToken(u *models.User) (map[string]string, error) 
 		RegisteredClaims: jwt.RegisteredClaims{
 			ID:        u.UUID,
 			Audience:  []string{"users"},
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 15)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 1)),
 		},
 		Username: u.Username,
 		Role:     u.Role,
