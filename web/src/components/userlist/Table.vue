@@ -84,6 +84,7 @@ import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 
 import {readValue} from '../../actions/jwt'
+import {refreshTokens} from '../../actions/auth'
 
 import client from '../../client/client'
 
@@ -158,6 +159,11 @@ export default {
           } else {
             this.buttonsCount = this.currentPage
           }
+        }).catch(() => {
+            if ( readValue() === ""){
+                this.$router.push('auth')
+            }
+            refreshTokens()
         })
     },
     dateFormat(value){

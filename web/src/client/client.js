@@ -1,13 +1,26 @@
 import axios from 'axios'
-import { readValue } from '../actions/jwt';
+import { refreshTokens } from '../actions/auth';
+import { tokenIsValid, readValue } from '../actions/jwt';
 
 const client = axios.create({
     baseURL: process.env.VUE_APP_API_PATH,
-    headers: {
-      "Authorization": "Bearer "+ readValue(),
-    },
     withCredentials: true 
   });
+
+client.interceptors.request.use(
+  async function(request){
+    if ( !tokenIsValid() ){
+      await refreshTokens()
+    }
+    request.headers.Authorization = 'Bearer ' + readValue()
+    return request;
+  },
+  (error) => {
+    if (error.statusCode == 401){
+      refreshTokens()
+    }
+  }
+)
 
 const auth = axios.create({
   baseURL: process.env.VUE_APP_API_PATH,

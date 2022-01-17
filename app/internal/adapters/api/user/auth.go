@@ -103,8 +103,9 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	http.SetCookie(w, cookie)
 
 	// Set access token to response body
-	data := map[string]string{
+	data := map[string]interface{}{
 		"access_token": tokens["access_token"],
+		"expires_in":   time.Now().Unix() + 60*1,
 	}
 
 	err = json.NewEncoder(w).Encode(data)
@@ -217,8 +218,9 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	http.SetCookie(w, cookie)
 
 	// Set access token to response body
-	data := map[string]string{
+	data := map[string]interface{}{
 		"access_token": tokens["access_token"],
+		"expires_in":   time.Now().Unix() + 60*1,
 	}
 
 	err = json.NewEncoder(w).Encode(data)

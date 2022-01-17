@@ -12,12 +12,9 @@ import (
 )
 
 type createParams struct {
-	Title       string
-	HourCount   int
-	Status      string
-	FromAddress string
-	ToAddress   string
-	Comment     string
+	Title   string
+	Comment string
+	Price   int
 }
 
 func (h *handler) Create(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -48,13 +45,10 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	}
 
 	order := models.Order{
-		Writer:      username,
-		Title:       params.Title,
-		Status:      params.Status,
-		FromAddress: params.FromAddress,
-		ToAddress:   params.ToAddress,
-		Comment:     params.Comment,
-		HourCount:   params.HourCount,
+		Writer:  username,
+		Title:   params.Title,
+		Comment: params.Comment,
+		Price:   params.Price,
 	}
 
 	if err := h.orderService.Create(&order); err != nil {
@@ -63,7 +57,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	log.Println("POST order-add: ", order.FromAddress)
+	log.Println("POST order-add: ", order.Title)
 
 	w.WriteHeader(http.StatusCreated)
 }

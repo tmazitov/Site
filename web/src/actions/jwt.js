@@ -1,15 +1,15 @@
-export function createLocalstorageItem(txtJwtTokenValue) {
-    sessionStorage.setItem("jwtToken", txtJwtTokenValue);
+export function createLocalstorageItem(token) {
+    sessionStorage.setItem("jwtToken", JSON.stringify(token));
 }
 
 export function readValue() {
-    var jwtToken = sessionStorage.getItem("jwtToken");
+    var jwtToken = JSON.parse(sessionStorage.getItem("jwtToken")).access_token;
     return jwtToken;
 }
 
-export function hasValue() {
-    let token = sessionStorage.getItem("jwtToken")
-    if (token == null || token == "") {
+export function tokenIsValid() {
+    let token = JSON.parse(sessionStorage.getItem("jwtToken"))
+    if (token.access_token == null || token.access_token == "" || Date.now() >= token.expires_in * 1000 ) {
         return false
     }
     return true;

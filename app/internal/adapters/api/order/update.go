@@ -10,12 +10,9 @@ import (
 )
 
 type updateParams struct {
-	UUID        string
-	Title       string
-	HourCount   string
-	FromAddress string
-	ToAddress   string
-	Comment     string
+	UUID    string
+	Title   string
+	Comment string
 }
 
 func (h *handler) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -58,11 +55,8 @@ func (h *handler) Update(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	}
 
 	newData := map[string]string{
-		"Title":       params.Title,
-		"HourCount":   params.HourCount,
-		"FromAddress": params.FromAddress,
-		"ToAddress":   params.ToAddress,
-		"Comment":     params.Comment,
+		"Title":   params.Title,
+		"Comment": params.Comment,
 	}
 
 	if err := h.orderService.Update(params.UUID, newData); err != nil {

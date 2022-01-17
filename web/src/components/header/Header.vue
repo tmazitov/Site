@@ -12,7 +12,7 @@
 import Item from './item/Item.vue'
 import SignIn from './auth/SingIn.vue'
 import SignOut from './auth/SignOut.vue'
-import {hasValue} from '../../actions/jwt.js'
+import {tokenIsValid} from '../../actions/jwt.js'
 
 export default {
   name: 'Header',
@@ -23,7 +23,7 @@ export default {
   },
   data(){
     return {
-      isAuth: hasValue(),
+      isAuth: tokenIsValid(),
     }
   },
 }
