@@ -1,5 +1,6 @@
 import { createLocalstorageItem, setNone } from './jwt';
 import {auth} from '../client/client';
+import router from '../router.js'
 
 export function signInAction(username, password, errField) {
     auth
@@ -8,7 +9,8 @@ export function signInAction(username, password, errField) {
             'password': password,
         })
         .then((response) => {
-            let token = response.data["access_token"]
+            let token = response.data
+            console.log(token)
             createLocalstorageItem(token)
             window.location.href = "/profile"
         })
@@ -54,17 +56,12 @@ export function signOutAction() {
         })
 }
 
-export function refreshTokens() {
-    auth
+export async function refreshTokens() {
+    const response = await auth
         .put('/user/refresh')
-        .then((response) => {
-            let token = response.data["access_token"]
-            createLocalstorageItem(token)
-            document.location.reload();
-        })
         .catch(() => {
-            window.location.href = "/auth"
-        });
-
-
+            router.push('auth')
+        })
+    let token = response.data
+    createLocalstorageItem(token)
 }
