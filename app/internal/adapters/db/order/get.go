@@ -15,10 +15,7 @@ func (us *orderStorage) Get(UUID string) (*models.Order, error) {
 		&order.Title,
 		&order.Writer,
 		&order.Date,
-		&order.HourCount,
 		&order.Status,
-		&order.FromAddress,
-		&order.ToAddress,
 		&order.Comment,
 	)
 	if err != nil {

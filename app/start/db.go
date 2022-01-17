@@ -62,12 +62,11 @@ func initOrderTable(db *sql.DB) error {
 		uuid text NOT NULL UNIQUE,
 		title text NOT NULL,
 		writer text NOT NULL REFERENCES users (username),
+		worker text REFERENCES users (username),
 		date integer NOT NULL,
-		hour_count integer NOT NULL ,
 		status text NOT NULL,
-		from_address text NOT NULL,
-		to_address text NOT NULL,
-		comment text NOT NULL)`)
+		comment text NOT NULL,
+		price integer NOT NULL)`)
 
 	if err != nil {
 		return err

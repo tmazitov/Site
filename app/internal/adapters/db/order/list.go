@@ -8,7 +8,7 @@ import (
 
 func (us *orderStorage) List() ([]*models.Order, error) {
 
-	rows, err := us.Conn.Query("select uuid, title, writer, date, status from orders")
+	rows, err := us.Conn.Query("select uuid, title, writer, date, status, price from orders")
 	if err != nil {
 		e := fmt.Errorf("fatal get list of orders from db: %s", err)
 		return nil, e
@@ -27,6 +27,7 @@ func (us *orderStorage) List() ([]*models.Order, error) {
 			&o.Writer,
 			&o.Date,
 			&o.Status,
+			&o.Price,
 		)
 		if err != nil {
 			log.Println(err)
