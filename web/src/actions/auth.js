@@ -10,9 +10,8 @@ export function signInAction(username, password, errField) {
         })
         .then((response) => {
             let token = response.data
-            console.log(token)
             createLocalstorageItem(token)
-            window.location.href = "/profile"
+            router.push('/profile')
         })
         .catch((error) => {
             if (error.response.status === 400) {
@@ -35,7 +34,7 @@ export function signUpAction(username, password, email, errField) {
         .then((response) => {
             let token = response.data["access_token"]
             createLocalstorageItem(token)
-            window.location.href = "/profile"
+            router.push('/profile')
         })
         .catch((error) => {
             if (error.response.status === 400){
@@ -62,6 +61,8 @@ export async function refreshTokens() {
         .catch(() => {
             router.push('auth')
         })
-    let token = response.data
-    createLocalstorageItem(token)
+    if (response){
+        let token = response.data
+        createLocalstorageItem(token)
+    }
 }

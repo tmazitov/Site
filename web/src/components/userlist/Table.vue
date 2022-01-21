@@ -83,9 +83,6 @@
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
 
-import {readValue} from '../../actions/jwt'
-import {refreshTokens} from '../../actions/auth'
-
 import client from '../../client/client'
 
 export default {
@@ -119,9 +116,6 @@ export default {
       this.currentPage = 1
       this.getUsersData()
     },
-    currentPage: function() {
-      this.getUsersData()
-    }
   },
   
   methods: {
@@ -134,22 +128,15 @@ export default {
     setCurrentPage(num){
       document.getElementById("pag_"+this.currentPage).className = "button_item"
       this.currentPage = num
+      this.getUsersData()
     },
     getUsersData(){
-
-      let token = readValue()
 
       client.get(
         "/user/list?"
         + "timestamp=" + this.time + "&"
         + "page=" + this.currentPage + "&"
-        + "per_page=" + this.perPage ,
-        {
-          headers: {
-            "Authorization": "Bearer "+ token,
-          },
-          withCredentials: true 
-        }
+        + "per_page=" + this.perPage 
         ).then((response) => {
           this.users = response.data["users"]
           document.getElementById("pag_"+this.currentPage).className += " activate"
@@ -159,11 +146,6 @@ export default {
           } else {
             this.buttonsCount = this.currentPage
           }
-        }).catch(() => {
-            if ( readValue() === ""){
-                this.$router.push('auth')
-            }
-            refreshTokens()
         })
     },
     dateFormat(value){
@@ -190,21 +172,21 @@ export default {
   }
   
   .button_item:hover{
-    background: #588C8E;
-    color: wheat;
-    border-color: #588C8E;
+    background: #9BC3C4;
+    color: #323134;
+    border-color: #9BC3C4;
   }
 
   .button_item.activate{
-    background: #588C8E;
-    color: wheat;
-    border-color: #588C8E;
+    background: #9BC3C4;
+    color: #323134;
+    border-color: #9BC3C4;
   }
 
   .button_item:active{
-    background: #507A7C;
-    color: wheat;
-    border-color: #507A7C;
+    background: #88abac;
+    color: #323134;
+    border-color: #88abac;
   }
 
   .pagination {
@@ -259,10 +241,10 @@ export default {
   border-right: 1px solid #9BC3C4;
   }
   .table thead tr th:first-child {
-  border-radius: 20px 0 0 0;
+  border-radius: 9px 0 0 0;
   }
   .table thead tr th:last-child {
-  border-radius: 0 20px 0 0;
+  border-radius: 0 9px 0 0;
   }
   .table tbody td {
   text-align: left;
@@ -278,9 +260,9 @@ export default {
   border-bottom: 1px solid #ddd;
   }
   .table tbody tr:last-child td:first-child {
-  border-radius: 0 0 0 20px;
+  border-radius: 0 0 0 9px;
   }
   .table tbody tr:last-child td:last-child {
-  border-radius: 0 0 20px 0;
+  border-radius: 0 0 9px 0;
   }  
 </style>

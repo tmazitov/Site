@@ -2,18 +2,49 @@
   <div id="main">
     <div id="main_cont">
       <div id="profile_page">
-
-        <div id="menu_cont">
+        <vue-final-modal v-model="showModal" name="modal" v-if="role == 'Admin'" >
+          <div id="modal_cont">
+            <div id="close_btn">
+              <unicon  
+              name="times" 
+              fill="red"
+              v-on:click="showModal = false"
+              > 
+              </unicon>
+            </div>
+            <AdminPanel/>
+          </div>
+        </vue-final-modal>
+        <div id="menu_cont" v-if="role == 'Worker' || role == 'Manager' || role == 'Admin'">
           <div id="info" class="menu_item active" v-on:click="toPage('info')">Info</div>
-          <div id="my" class="menu_item" v-on:click="toPage('my')">My orders</div>
-          <div id="other" class="menu_item" v-on:click="toPage('other')">Other orders</div>
-          <div id="create" class="menu_item" v-on:click="toPage('create')">Create new</div>
+          <div 
+            id="my" 
+            class="menu_item"
+            v-if="role == 'Worker' || role == 'Manager'"
+            v-on:click="toPage('my')"
+            >My orders
+          </div>
+          <div 
+          id="other" 
+          class="menu_item" 
+          v-on:click="toPage('other')"
+          v-if="role == 'Worker' || role == 'Manager' || role == 'Admin'"
+          >Order list
+          </div>
+          <div 
+            id="create" 
+            class="menu_item" 
+            v-on:click="toPage('create')"
+            v-if="role == 'Admin' || role == 'Manager'"
+            >
+            New order
+          </div>
           <div 
           id="userlist" 
           v-if="role == 'Admin'" 
           class="menu_item"
-          v-on:click="toPage('userlist')"
-          > Userlist
+          @click="openModalExample"
+          > Admin panel
           </div>
         </div>
         <div style="display: grid; margin-left:16px" :key="currentPage">
@@ -25,21 +56,17 @@
             <div class="profile_item">Registration date: {{register}}</div>
           </div>
 
-          <div id="orders" v-if="currentPage == 'my'">
-            <h2 class="header">My orders</h2>
-            <OrderList/>
+          <div id="selected_cont" v-if="currentPage == 'my' && (role == 'Worker' || role == 'Manager')">
+            <h2 class="header">My orders</h2> 
+            <OrderList :username="username" :role="role" mode="my"/>
           </div>
-          <div id="orders" v-if="currentPage == 'other'">
-            <h2 class="header">Other orders</h2>
-            <OrderList/>
+          <div id="selected_cont" v-if="currentPage == 'other'">
+            <h2 class="header">Order list</h2>
+            <OrderList :username="username" :role="role" mode="all"/>
           </div>
-          <div id="orders" v-if="currentPage == 'create'">
+          <div id="selected_cont" v-if="currentPage == 'create'">
             <h2 class="header">New order</h2>
             <CreateOrder/>
-          </div>
-          <div id="orders" v-if="currentPage == 'userlist'">
-            <h2 class="header">Userlist</h2>
-            <UserList/>
           </div>
         </div>
         
@@ -49,10 +76,13 @@
 </template>
 
 <script>
-import UserList from '../components/userlist/Table.vue'
+import { VueFinalModal } from 'vue-final-modal'
+
 import client from '../client/client.js'
 import CreateOrder from '../components/order/Create.vue'
 import OrderList from '../components/order/List.vue'
+import AdminPanel from '../components/adminpanel/AdminPanel.vue'
+
 
 export default {
   name: 'Profile',
@@ -63,6 +93,7 @@ export default {
         role: null,
         email: null,
         currentPage:"info",
+        showModal: false,
       }
   },
   beforeCreate() {
@@ -76,9 +107,10 @@ export default {
       })
   },
   components: {
-    UserList,
     CreateOrder,
-    OrderList
+    OrderList,
+    VueFinalModal,
+    AdminPanel
   },
   methods: {
     toPage(id){
@@ -90,6 +122,9 @@ export default {
       
       this.currentPage = id
     },
+    openModalExample() {
+      this.$vfm.show('modal')
+    }
   },
 }
 </script>
@@ -110,7 +145,7 @@ export default {
   width: fit-content;
 }
 
-#orders {
+#selected_cont {
   height: 450px;
 }
 
@@ -143,6 +178,7 @@ export default {
   display: grid;
   margin-top: 31px;
 }
+
 .menu_item{
   color: #323134;
   font-family: 'Baloo Bhaijaan 2';
@@ -169,5 +205,15 @@ export default {
 #profile_page{
   display: grid;
   grid-template-columns: 120px 1fr;
+}
+
+#modal_cont{
+  margin: 0px 23vw;
+  margin-top: 50px;
+  padding: 20px;
+  background: white;
+  border-radius: 11px;
+      overflow-y: auto;
+    max-height: 600px;
 }
 </style>

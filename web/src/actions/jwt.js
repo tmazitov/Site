@@ -3,12 +3,21 @@ export function createLocalstorageItem(token) {
 }
 
 export function readValue() {
-    var jwtToken = JSON.parse(sessionStorage.getItem("jwtToken")).access_token;
-    return jwtToken;
+    var jwtToken = sessionStorage.getItem("jwtToken")
+    if (!jwtToken) {
+        return null
+    }
+    return JSON.parse(jwtToken).access_token
 }
 
 export function tokenIsValid() {
-    let token = JSON.parse(sessionStorage.getItem("jwtToken"))
+    let token = sessionStorage.getItem("jwtToken")
+    if (token == null || token == "") {
+        return false
+    }
+
+    token = JSON.parse(token)
+
     if (token.access_token == null || token.access_token == "" || Date.now() >= token.expires_in * 1000 ) {
         return false
     }

@@ -36,3 +36,43 @@ a:hover {
     color: black;
     cursor: default;
 }
+
+#close_btn{
+    float: right;
+}
+
+.create_field{
+    margin-top: 3px;
+    border: 2px solid #9BC3C4;
+    border-radius: 7px;
+    height: 20px;
+    padding: 3px 8px;
+}
+.create_field:focus{
+    outline: none !important;
+    border-color: wheat;
+}
+.create_item{
+    margin-top: 14px;
+}
+#create_btn_cont{
+    margin: 18px 0px;
+}
+#create_btn{
+    height: 36px;
+    border-radius: 7px;
+    border: 0px solid;
+    background: #5f9ea0;
+    font-family: "Baloo Bhaijaan 2";
+    font-size: 17px;
+    font-weight:500 ;
+    width: 200px;
+    cursor: pointer;
+}
+#create_btn:hover{
+background: #588C8E;
+color:wheat;
+}
+#create_btn:active{
+background: #507A7C;
+}

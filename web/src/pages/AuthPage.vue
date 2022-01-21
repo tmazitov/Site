@@ -1,14 +1,14 @@
 <template>
   <div id="main">
     <div id="main_cont">
-      <div id="auth_cont">
-          <h2 class="header" :key="signIn" v-if="signIn">Sign in</h2>
-          <h2 class="header" :key="signIn" v-if="!signIn">Sign up</h2>
+      <div id="auth_cont" :key="signIn">
+          <h2 class="header" v-if="signIn">Sign in</h2>
+          <h2 class="header" v-if="!signIn">Sign up</h2>
             <div class="auth_item">
                 <div class="sub_header">Login</div>
                 <input id="username" type="text" class="auth_field"/>
             </div>
-            <div class="auth_item" :key="signIn" v-if="!signIn">
+            <div class="auth_item"  v-if="!signIn">
                 <div class="sub_header">Email</div>
                 <input id="email" type="email" class="auth_field"/>
             </div>
@@ -16,7 +16,7 @@
                 <div class="sub_header">Password</div>
                 <input id="password" type="password" class="auth_field"/>
             </div>
-            <div class="auth_noacc" :key="signIn" v-if="signIn">
+            <div class="auth_noacc"  v-if="signIn">
                 <a>Missing password? Change them 
                     <span style="color:#5f9ea0;font-weight:500">
                         here
@@ -25,22 +25,22 @@
             </div>
             <div id="auth_err">
             </div> 
-            <div id="auth_btn_cont"> 
-                <button id="auth_btn" :key="signIn" v-if="signIn" v-on:click="doSignIn()">
+            <div id="auth_btn_cont" > 
+                <button id="auth_btn" v-if="signIn" v-on:click="doSignIn()">
                     Sign in
                 </button>
-                <button id="auth_btn" :key="signIn" v-if="!signIn" v-on:click="doSignUp()"> 
+                <button id="auth_btn" v-if="!signIn" v-on:click="doSignUp()"> 
                     Sign up
                 </button>
             </div>
-            <div class="auth_noacc" :key="signIn" v-if="signIn">
+            <div class="auth_noacc" v-if="signIn">
                 <a>Don't have account? Create 
                     <span class="auth_link" v-on:click="changeAuth()">
                         here
                     </span>!
                 </a>   
             </div>
-            <div class="auth_noacc" :key="signIn" v-if="!signIn">
+            <div class="auth_noacc" v-if="!signIn">
                 <a>Wait... I have 
                     <span class="auth_link" v-on:click="changeAuth()">
                         account
