@@ -38,6 +38,10 @@ func (s *service) GetUserByUsername(username string) (*models.User, error) {
 	return s.storage.GetUserByUsername(username)
 }
 
-func (s *service) UpgradeRole(user *models.User) error {
-	return s.storage.UpgradeRole(user)
+func (s *service) UpgradeAdminRole(user *models.User) error {
+	return s.storage.UpgradeAdminRole(user)
+}
+
+func (s *service) UpgradeRole(username string, role string) error {
+	return s.storage.UpgradeRole(username, role)
 }

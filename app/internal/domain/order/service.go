@@ -34,6 +34,6 @@ func (s *service) Get(UUID string) (*models.Order, error) {
 	return s.storage.Get(UUID)
 }
 
-func (s *service) List() ([]*models.Order, error) {
-	return s.storage.List()
+func (s *service) List(params map[string]string) ([]*models.Order, error) {
+	return s.storage.List(params)
 }

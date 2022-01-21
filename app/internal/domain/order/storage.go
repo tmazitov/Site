@@ -8,5 +8,5 @@ type Storage interface {
 	Complite(UUID string) error
 	Update(UUID string, data map[string]string) error
 	Get(UUID string) (*models.Order, error)
-	List() ([]*models.Order, error)
+	List(params map[string]string) ([]*models.Order, error)
 }
