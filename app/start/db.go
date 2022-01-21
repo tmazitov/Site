@@ -1,9 +1,13 @@
 package start
 
 import (
+	"crypto/sha256"
 	"database/sql"
+	"encoding/hex"
 	"fmt"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/spf13/viper"
 )
 
@@ -35,6 +39,10 @@ func DbConnect() (*sql.DB, error) {
 	}
 
 	if err := initOrderTable(db); err != nil {
+		return nil, err
+	}
+
+	if err := initAdmin(db); err != nil {
 		return nil, err
 	}
 
@@ -73,4 +81,41 @@ func initOrderTable(db *sql.DB) error {
 	}
 
 	return nil
+}
+
+func initAdmin(db *sql.DB) error {
+	register := time.Now().Unix()
+
+	rand, err := uuid.NewUUID()
+	if err != nil {
+		return err
+	}
+	id := rand.String()
+	username := viper.GetString("admin_username")
+	password := viper.GetString("admin_password")
+	email := viper.GetString("admin_email")
+
+	password = getMD5Hash(password)
+
+	// Record new user
+	_, err = db.Exec(`insert 
+	into users 
+	(username, password, email, role, register, random) 
+	values 
+	($1, $2, $3, $4, $5, $6)
+	on conflict do nothing`,
+		username, password, email, "Admin", register, id)
+
+	if err != nil {
+		e := fmt.Errorf("fatal create admin to db: %s", err)
+		return e
+	}
+
+	return nil
+}
+
+// GetMD5Hash convert to md5 hash
+func getMD5Hash(text string) string {
+	hash := sha256.Sum256([]byte(text))
+	return hex.EncodeToString(hash[:])
 }
