@@ -23,6 +23,5 @@ func (h *handler) Register(router *httprouter.Router) {
 	router.PUT("/user/refresh", h.Refresh)
 	router.GET("/user/list", jwt.Middleware(h.List))
 	router.GET("/user/profile", jwt.Middleware(h.Profile))
-	router.GET("/user/upgrade", jwt.Middleware(h.UpgradeRole))
-
+	router.POST("/user/upgrade", jwt.Middleware(h.UpgradeRole))
 }

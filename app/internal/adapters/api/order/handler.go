@@ -21,6 +21,7 @@ func (h *handler) Register(router *httprouter.Router) {
 	router.PUT("/order/update", jwt.Middleware(h.Update))
 	router.GET("/order/get", jwt.Middleware(h.Get))
 	router.GET("/order/list", jwt.Middleware(h.List))
-	router.DELETE("/order/delete", jwt.Middleware(h.Delete))
-	router.PUT("/order/complite", jwt.Middleware(h.Complite))
+	router.GET("/order/delete", jwt.Middleware(h.Delete))
+	router.GET("/order/complite", jwt.Middleware(h.Complite))
+	router.GET("/order/worker", jwt.Middleware(h.SetWorker))
 }

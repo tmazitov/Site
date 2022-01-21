@@ -1,17 +1,11 @@
 package order
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
 )
-
-type deleteParams struct {
-	UUID string
-}
 
 func (h *handler) Delete(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
@@ -23,31 +17,18 @@ func (h *handler) Delete(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 
-	if role != "Admin" {
+	if role != "Admin" && role != "Manager" {
 		log.Println(err.Error())
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
 
-	var params deleteParams
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
-	if err = json.Unmarshal(body, &params); err != nil {
-		log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-		return
-	}
+	uuid := r.FormValue("order")
 
-	if err := h.orderService.Delete(params.UUID); err != nil {
+	if err := h.orderService.Delete(uuid); err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 
 }

@@ -8,12 +8,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (h *handler) Complite(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	w.Header().Set("Content-Security-Policy", "policy")
-	w.Header().Set("X-Frame-Options", "DENY")
-	w.Header().Set("X-XSS-Protection", "1; mode=block")
-
+func (h *handler) SetWorker(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// Get username from access token
 	username, role, err := h.JWTHelper.GetUserByToken(r)
 	if err != nil {
@@ -22,8 +17,8 @@ func (h *handler) Complite(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	if role != "Worker" {
-		log.Println(fmt.Errorf("fatal attempt to create order without permission by %s", username))
+	if role != "Worker" && role != "Admin" {
+		log.Println(fmt.Errorf("fatal attempt to update order without permission by %s", username))
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
@@ -37,16 +32,20 @@ func (h *handler) Complite(w http.ResponseWriter, r *http.Request, ps httprouter
 		return
 	}
 
-	if username != order.Worker {
+	if order.Worker != "" {
+		log.Printf("fatal set worker: order %v has worker %v", order.Title, order.Worker)
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
 	}
 
-	if err := h.orderService.Complite(uuid); err != nil {
+	newData := map[string]string{
+		"worker": username,
+		"status": "in process",
+	}
+
+	if err := h.orderService.Update(uuid, newData); err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
-
-	w.WriteHeader(http.StatusOK)
 }

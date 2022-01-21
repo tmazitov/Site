@@ -8,5 +8,5 @@ type Service interface {
 	Get(UUID string) (*models.Order, error)
 	Complite(UUID string) error
 	Update(UUID string, data map[string]string) error
-	List() ([]*models.Order, error)
+	List(params map[string]string) ([]*models.Order, error)
 }
