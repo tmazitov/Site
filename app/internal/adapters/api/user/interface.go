@@ -9,5 +9,6 @@ type Service interface {
 	GetUserByUsername(username string) (*models.User, error)
 	CheckUsername(username string) error
 	CheckEmail(email string) error
-	UpgradeRole(user *models.User) error
+	UpgradeRole(username string, role string) error
+	UpgradeAdminRole(user *models.User) error
 }
