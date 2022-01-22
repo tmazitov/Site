@@ -256,7 +256,7 @@ var doc = `{
             }
         },
         "/user/upgrade": {
-            "get": {
+            "post": {
                 "description": "Upgrade user role",
                 "consumes": [
                     "application/json"
@@ -270,6 +270,15 @@ var doc = `{
                 "summary": "Upgrade user role",
                 "operationId": "upgrade",
                 "parameters": [
+                    {
+                        "description": "upgrade params",
+                        "name": "Params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.upgradeParams"
+                        }
+                    },
                     {
                         "type": "string",
                         "default": "Bearer \u003cAdd access token here\u003e",
@@ -326,6 +335,17 @@ var doc = `{
                     "type": "string",
                     "minLength": 5,
                     "example": "example"
+                }
+            }
+        },
+        "user.upgradeParams": {
+            "type": "object",
+            "properties": {
+                "role": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }
