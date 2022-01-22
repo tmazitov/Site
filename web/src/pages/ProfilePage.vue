@@ -15,6 +15,7 @@
             <AdminPanel/>
           </div>
         </vue-final-modal>
+        <div id="menu_none" v-if="role=='User'"></div>
         <div id="menu_cont" v-if="role == 'Worker' || role == 'Manager' || role == 'Admin'">
           <div id="info" class="menu_item active" v-on:click="toPage('info')">Info</div>
           <div 

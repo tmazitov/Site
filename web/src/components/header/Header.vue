@@ -1,10 +1,10 @@
 <template>
-  <div id="header_cont" :key="isAuth()">
+  <div id="header_cont" :key="isAuth" ref="header">
       <Item title="Main" url="/"/>
       <Item title="Profile" url="/profile"/>
       <Item title="About" url="/about"/>
-      <SignIn title="Sign in" url="/auth" v-if="!isAuth()"/>
-      <SignOut title="Sign out" v-if="isAuth()"/>
+      <SignIn title="Sign in" url="/auth" v-if="!isAuth"/>
+      <SignOut title="Sign out" v-if="isAuth"/>
   </div>
 </template>
 
@@ -21,9 +21,14 @@ export default {
     SignIn,
     SignOut
   },
+  beforeCreate() {
+    setInterval(()=>{
+      this.isAuth = tokenIsValid()
+    }, 500)
+  },
   data() {
     return {
-      isAuth : tokenIsValid,
+      isAuth : tokenIsValid(),
     }
   },
 }

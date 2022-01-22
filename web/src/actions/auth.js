@@ -51,7 +51,7 @@ export function signOutAction() {
     auth
         .get('/user/exit')
         .then(() => {
-            window.location.href = "/"
+            router.push("/")
         })
 }
 
