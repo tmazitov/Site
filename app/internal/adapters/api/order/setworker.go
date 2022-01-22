@@ -17,7 +17,7 @@ func (h *handler) SetWorker(w http.ResponseWriter, r *http.Request, ps httproute
 		return
 	}
 
-	if role != "Worker" && role != "Admin" {
+	if role != "Worker" {
 		log.Println(fmt.Errorf("fatal attempt to update order without permission by %s", username))
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return

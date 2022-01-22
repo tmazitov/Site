@@ -2,7 +2,6 @@ package user
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"site/pkg/middleware/jwt"
@@ -23,7 +22,6 @@ import (
 // @Failure      500  {string}  string  "Internal Server Error"
 // @Router       /user/refresh [put]
 func (h *handler) Refresh(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Security-Policy", "policy")
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("X-XSS-Protection", "1; mode=block")
@@ -40,7 +38,6 @@ func (h *handler) Refresh(w http.ResponseWriter, r *http.Request, ps httprouter.
 	tokens, err := h.JWTHelper.UpdateRefreshToken(rt)
 	if err != nil {
 		log.Println(err.Error())
-		fmt.Println("")
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}

@@ -31,8 +31,6 @@ type ListParams struct {
 // @Failure      500            {string}  string      "Internal Server Error"
 // @Router       /user/list [get]
 func (h *handler) List(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Security-Policy", "policy")
 	w.Header().Set("X-Frame-Options", "DENY")
 	w.Header().Set("X-XSS-Protection", "1; mode=block")

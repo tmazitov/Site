@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -31,7 +32,7 @@ type upgradeParams struct {
 func (h *handler) UpgradeRole(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	var params upgradeParams
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 102400))
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)

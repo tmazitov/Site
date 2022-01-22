@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -45,7 +46,7 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	// Get payload
 	var params SignInParams
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 102400))
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
@@ -64,11 +65,6 @@ func (h *handler) SignIn(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 	if !isValid {
-		log.Println("Invalid params for auth")
-		http.Error(w, "Bad request", 400)
-		return
-	}
-	if len(params.Password) > 32 || len(params.Username) > 16 {
 		log.Println("Invalid params for auth")
 		http.Error(w, "Bad request", 400)
 		return
@@ -140,7 +136,7 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	// Get payload
 	var params SignUpParams
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 102400))
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
@@ -160,11 +156,6 @@ func (h *handler) SignUp(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		return
 	}
 	if !isValid {
-		log.Println("Invalid params for auth")
-		http.Error(w, "Bad request", 400)
-		return
-	}
-	if len(params.Password) > 32 || len(params.Username) > 16 {
 		log.Println("Invalid params for auth")
 		http.Error(w, "Bad request", 400)
 		return

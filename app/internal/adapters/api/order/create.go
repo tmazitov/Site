@@ -3,6 +3,7 @@ package order
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -39,13 +40,13 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	var params createParams
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 102400))
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
-	fmt.Println(len(body))
+
 	if err = json.Unmarshal(body, &params); err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", 500)
